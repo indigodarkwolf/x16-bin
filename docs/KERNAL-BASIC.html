@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>X16 KERNAL/BASIC/DOS ROM</title>
+  <title>Commander X16 KERNAL/BASIC/DOS ROM</title>
   <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -17,8 +17,8 @@
   <![endif]-->
 </head>
 <body>
-<h1 id="commander-x16-basickernaldos-rom">Commander X16 BASIC/KERNAL/DOS ROM</h1>
-<p>This is the Commander X16 ROM containing BASIC, KERNAL and DOS. BASIC and KERNAL are derived from the <a href="https://github.com/mist64/c64rom">Commodore 64 versions</a>.</p>
+<h1 id="commander-x16-basickernaldosgeos-rom">Commander X16 BASIC/KERNAL/DOS/GEOS ROM</h1>
+<p>This is the Commander X16 ROM containing BASIC, KERNAL, DOS and GEOS. BASIC and KERNAL are derived from the <a href="https://github.com/mist64/c64rom">Commodore 64 versions</a>. GEOS is derived from the <a href="https://github.com/mist64/geos">C64/C128 version</a>.</p>
 <ul>
 <li>BASIC is fully compatible with Commodore BASIC V2.</li>
 <li>KERNAL
@@ -27,7 +27,42 @@
 <li>has the same zero page and $0200-$033C memory layout as the C64.</li>
 <li>does not support tape (device 1).</li>
 </ul></li>
+<li>GEOS is fully compatible with the C64 version.</li>
 </ul>
+<h2 id="releases-and-building">Releases and Building</h2>
+<p><a href="https://travis-ci.org/commanderx16/x16-emulator"><img alt="Travis (.org)" src="https://img.shields.io/travis/commanderx16/x16-rom.svg?label=CI&logo=travis&logoColor=white&style=for-the-badge"></a></p>
+<p>Each <a href="https://github.com/commanderx16/x16-emulator/releases">release of the X16 emulator</a> includes a compatible build of <code>rom.bin</code>. If you wish to build this yourself (perhaps because you're also building the emulator) see below.</p>
+<blockquote>
+<p><strong>WARNING:</strong> The emulator will currently work only with a contemporary version of <code>rom.bin</code>; earlier or later versions are likely to fail.</p>
+</blockquote>
+<h3 id="building-the-rom">Building the ROM</h3>
+<p>Building this source code requires only <a href="https://www.gnu.org/software/make/">GNU Make</a> and the <a href="https://cc65.github.io/">cc65</a> assembler. GNU Make is almost invariably available as a system package with any Linux distribution; cc65 less often so.</p>
+<ul>
+<li>Red Hat: <code>sudo yum install make cc65</code></li>
+<li>Debian: <code>sudo apt-get install make</code></li>
+</ul>
+<p>On macOS, cc65 in <a href="https://brew.sh/">homebrew</a>, which must be installed before issuing the following command:</p>
+<ul>
+<li>macOS: <code>brew install cc65</code></li>
+</ul>
+<p>If cc65 is not available as a package on your system, you'll need to install or build/install it per the instructions below.</p>
+<p>Once the prerequisites are available, type <code>make</code> to build <code>rom.bin</code>. To use that with the emulator, copy it to the same directory as the <code>x16emu</code> binary or use <code>x16emu -rom .../path/to/rom.bin</code>.</p>
+<h3 id="buildinginstalling-cc65">Building/Installing cc65</h3>
+<h4 id="linux-builds-from-source">Linux Builds from Source</h4>
+<p>You'll need the basic set of tools for building C programs:</p>
+<ul>
+<li>Debian/Ubuntu: <code>sudo apt-get install build-essential git</code></li>
+</ul>
+<p>The cc65 source is <a href="https://cc65.github.io/">on GitHub</a>; clone and build it with:</p>
+<pre><code>git clone https://github.com/cc65/cc65.git
+make -j4    # -j4 may be left off; it merely speeds the build
+</code></pre>
+<p>This will leave the binaries in the <code>bin/</code> subdirectory; you may use thes directly by adding them to your path, or install them to a standard directory:</p>
+<pre><code>#   This assumes you have ~/.local/bin in your path.
+make install PREFIX=~/.local
+</code></pre>
+<h4 id="building-and-packages-for-other-systems">Building and Packages for Other Systems</h4>
+<p>Consult the Nesdev Wiki <a href="https://wiki.nesdev.com/w/index.php/Installing_CC65">Installing CC65</a> page for some hints, including Windows installs. However, the Debian packages they suggest from <a href="https://spiro.trikaliotis.net/debian">trikaliotis.net</a> appear to have signature errors.</p>
 <h2 id="new-features">New Features</h2>
 <ul>
 <li>F-keys: F1: <code>LIST</code> F2: <code>MONITOR</code> F3: <code>RUN</code> F4: &lt;switch 40/80&gt; F5: <code>LOAD</code> F6: <code>SAVE"</code> F7: <code>DOS"$</code> F8: <code>DOS</code></li>
@@ -62,15 +97,47 @@
 <li>PS/2 and SD have issues on real hardware.</li>
 </ul>
 <h2 id="rom-map">ROM Map</h2>
-<ul>
-<li>fixed ROM ($E000-$FFFF): KERNAL</li>
-<li>banked ROM ($C000-$DFFF):
-<ul>
-<li>bank 0: BASIC</li>
-<li>bank 1: UTIL (monitor)</li>
-<li>bank 2: DOS</li>
-</ul></li>
-</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Bank</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>BASIC</td>
+<td>BASIC interpreter</td>
+</tr>
+<tr class="even">
+<td>1-3</td>
+<td>–</td>
+<td><em>[Currently unused]</em></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>GEOS</td>
+<td>GEOS KERNAL</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>CBDOS</td>
+<td>The computer-based CBM-DOS for FAT32 SD cards</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>KEYMAP</td>
+<td>Keyboard layout tables</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>KERNAL</td>
+<td>character sets (uploaded into VRAM), MONITOR, KERNAL</td>
+</tr>
+</tbody>
+</table>
 <h2 id="ram-map">RAM Map</h2>
 <ul>
 <li>fixed RAM:
@@ -86,9 +153,51 @@
 </ul></li>
 </ul>
 <h2 id="credits">Credits</h2>
-<p>KERNAL and BASIC additions, DOS: Michael Steil, <a href="https://www.pagetable.com/">www.pagetable.com</a>; 2-clause BSD license</p>
+<p>KERNAL, BASIC and GEOS additions, DOS: Michael Steil, <a href="https://www.pagetable.com/">www.pagetable.com</a>; 2-clause BSD license</p>
 <p>FAT32 and SD card drivers: Copyright (c) 2018 Thomas Woinke, Marko Lauke, <a href="https://steckschwein.de">www.steckschein.de</a>; MIT License</p>
 <h2 id="release-notes">Release Notes</h2>
+<h3 id="release-33">Release 33</h3>
+<ul>
+<li>BASIC
+<ul>
+<li>additional LOAD syntax to load to a specific address <code>LOAD [filename[,device[,bank,address]]]</code></li>
+<li>LOAD into banked RAM will auto-wrap into successive banks</li>
+<li>LOAD allows trailing gargabe; great to just type "LOAD" into a directory line [John-Paul Gignac]</li>
+<li>new BASIC statement: VLOAD to load into video RAM: <code>VLOAD [filename[,device[,bank,address]]]</code> [John-Paul Gignac]</li>
+<li>complete jump table bridge</li>
+</ul></li>
+<li>KERNAL: memory size detection</li>
+<li>KERNAL: faster IRQ entry</li>
+<li>GEOS: converted graphics library to VERA 320x200@256c</li>
+</ul>
+<h3 id="release-32">Release 32</h3>
+<ul>
+<li>correct ROM banking:
+<ul>
+<li>BASIC and KERNAL now live on separate 16 KB banks ($C000-$FFFF)</li>
+<li>BASIC "PEEK" will always access KERNAL ROM</li>
+<li>BASIC "SYS" will have BASIC ROM enabled</li>
+</ul></li>
+<li>added GEOS</li>
+<li>added OLD statement to recover deleted BASIC program after NEW or RESET</li>
+<li>removed software RS-232, will be replaced by VERA UART later</li>
+<li>Full ISO mode support in Monitor</li>
+</ul>
+<h3 id="release-31">Release 31</h3>
+<ul>
+<li>switched to VERA 0.8 register layout; character ROM is uploaded on startup</li>
+<li>ISO mode: ISO-8859-15 character set, standard ASCII keyboard</li>
+<li>keyboard
+<ul>
+<li>completed US and UK keymaps so all C64 characters are reachable</li>
+<li>support for AltGr</li>
+<li>support for F9-F12</li>
+</ul></li>
+<li>allow hex and binary numbers in DATA statements [Frank Buss]</li>
+<li>switched SD card from VIA SPI to VERA SPI (works on real hardware!)</li>
+<li>fix: VPEEK overwriting POKER ($14/$15)</li>
+<li>fix: STOP sometimes not registering in BASIC programs</li>
+</ul>
 <h3 id="release-30">Release 30</h3>
 <ul>
 <li>support for 13 keyboard layouts; cycle through them using F9</li>
@@ -100,5 +209,6 @@
 <li>fix: CBDOS was not correctly preserving the RAM bank</li>
 <li>fix: KERNAL no longer uses zero page $FC-$FE</li>
 </ul>
+<!-------------------------------------------------------------------->
 </body>
 </html>

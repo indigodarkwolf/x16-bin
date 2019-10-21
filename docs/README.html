@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>X16 Emulator</title>
+  <title>Commander X16 Emulator</title>
   <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -20,19 +20,42 @@
 <h1 id="commander-x16-emulator">Commander X16 Emulator</h1>
 <p>This is an emulator for the Commander X16 computer system. It only depends on SDL2 and should compile on all modern operating systems.</p>
 <h2 id="binaries--compiling">Binaries &amp; Compiling</h2>
-<p>Binary releases for macOS, Windows and x86_64 Linux are available on the <a href="https://github.com/commanderx16/x16-emulator/releases">releases page</a>.</p>
-<p>For all other systems, make sure the development version of SDL2 is installed and type <code>make</code> for build the source.</p>
+<p><a href="https://travis-ci.org/commanderx16/x16-emulator"><img alt="Travis (.org)" src="https://img.shields.io/travis/commanderx16/x16-emulator.svg?label=CI&logo=travis&logoColor=white&style=for-the-badge"></a></p>
+<p>Binary releases for MacOS, Windows and x86_64 Linux are available on the <a href="https://github.com/commanderx16/x16-emulator/releases">releases page</a>.</p>
+<p>The emulator itself is dependent only on SDL2. However, to run the emulated system you will also need a compatible <code>rom.bin</code> ROM image. This will be loaded from the directory containing the emulator binary, or you can use the <code>-rom .../path/to/rom.bin</code> option.</p>
+<blockquote>
+<p><strong>WARNING:</strong> Older versions of the ROM might not work in newer versions of the emulator, and vice versa.</p>
+</blockquote>
+<p>You can build a ROM image yourself using the <a href="https://github.com/commanderx16/x16-rom#releases-and-building">build instructions</a> in the <a href="https://github.com/commanderx16/x16-rom">x16rom</a> repo. The <code>rom.bin</code> included in the <a href="https://github.com/commanderx16/x16-emulator/releases"><em>latest</em> release</a> of the emulator may also work with the HEAD of this repo, but this is not guaranteed.</p>
+<h3 id="linux-build">Linux Build</h3>
+<p>The SDL2 development package is available as a distribution package with most major versions of Linux:</p>
+<ul>
+<li>Red Hat: <code>yum install SDL2-devel</code></li>
+<li>Debian: <code>apt-get install libsdl2-dev</code></li>
+</ul>
+<p>Type <code>make</code> to build the source. The output will be <code>x16emu</code> in the current directory. Remember you will also need a <code>rom.bin</code> as described above.</p>
+<h3 id="webassembly-build">WebAssembly Build</h3>
+<p>Steps for compiling WebAssembly/HTML5 can be found <a href="webassembly/WebAssembly.md">here</a>.</p>
 <h2 id="starting">Starting</h2>
 <p>You can start <code>x16emu</code>/<code>x16emu.exe</code> either by double-clicking it, or from the command line. The latter allows you to specify additional arguments.</p>
 <ul>
-<li>When starting <code>x16emu</code> without arguments, it will pick up the system ROM (<code>rom.bin</code>) and the character ROM (<code>chargen.bin</code>) from the executable's directory.</li>
-<li>The system ROM and character ROM filenames/paths can be overridden with the <code>-rom</code> and <code>-char</code> command line arguments.</li>
+<li>When starting <code>x16emu</code> without arguments, it will pick up the system ROM (<code>rom.bin</code>) from the executable's directory.</li>
+<li>The system ROM filename/path can be overridden with the <code>-rom</code> command line argument.</li>
 <li><code>-keymap</code> tells the KERNAL to switch to a specific keyboard layout. Use it without an argument to view the supported layouts.</li>
 <li><code>-sdcard</code> lets you specify an SD card image (partition table + FAT32).</li>
 <li><code>-prg</code> lets you specify a <code>.prg</code> file that gets injected into RAM after start.</li>
-<li><code>-run</code> same as above, but also executes the application using <code>RUN</code> or <code>SYS</code>, depending on the load address.</li>
 <li><code>-bas</code> lets you specify a BASIC program in ASCII format that automatically typed in (and tokenized).</li>
+<li><code>-run</code> executes the application specified through <code>-prg</code> or <code>-bas</code> using <code>RUN</code> or <code>SYS</code>, depending on the load address.</li>
+<li><code>-scale</code> scales video output to an integer multiple of 640x480</li>
 <li><code>-echo</code> causes all KERNAL/BASIC output to be printed to the host's terminal. Enable this and use the BASIC command "LIST" to convert a BASIC program to ASCII (detokenize).</li>
+<li><code>-gif &lt;filename&gt;[,wait]</code> to record the screen into a GIF. See below for more info.</li>
+<li><code>-scale</code> scales video output to an integer multiple of 640x480</li>
+<li><code>-quality</code> change image scaling algorithm quality
+<ul>
+<li><code>nearest</code>: nearest pixel sampling</li>
+<li><code>linear</code>: linear filtering</li>
+<li><code>best</code>: (default) anisotropic filtering</li>
+</ul></li>
 <li><code>-log</code> enables one or more types of logging (e.g. <code>-log KS</code>):
 <ul>
 <li><code>K</code>: keyboard (key-up and key-down events)</li>
@@ -40,6 +63,14 @@
 <li><code>V</code>: video I/O reads and writes</li>
 </ul></li>
 <li><code>-debug</code> enables the debugger.</li>
+<li><code>-dump</code> configure system dump (e.g. <code>-dump CB</code>):
+<ul>
+<li><code>C</code>: CPU registers (7 B: A,X,Y,SP,STATUS,PC)</li>
+<li><code>R</code>: RAM (40 KiB)</li>
+<li><code>B</code>: Banked RAM (2 MiB)</li>
+<li><code>V</code>: Video RAM and registers (128 KiB VRAM, 32 B composer registers, 512 B pallete, 16 B layer0 registers, 16 B layer1 registers, 16 B sprite registers, 2 KiB sprite attributes)</li>
+</ul></li>
+<li>When compiled with <code>WITH_YM2151</code>, <code>-sound</code> can be used to specify the output sound device.</li>
 <li>When compiled with <code>#define TRACE</code>, <code>-trace</code> will enable an instruction trace on stdout.</li>
 </ul>
 <p>Run <code>x16emu -h</code> to see all command line options.</p>
@@ -171,10 +202,21 @@
 <ul>
 <li>Ctrl + R will reset the computer.</li>
 <li>Ctrl + V will paste the clipboard by injecting key presses.</li>
-<li>Ctrl + S will save a memory dump (40 KB main RAM + 2 MB bankable RAM) to disk.</li>
+<li>Ctrl + S will save a system dump (configurable with <code>-dump</code>) to disk.</li>
 <li>Ctrl + Return will toggle full screen mode.</li>
 </ul>
 <p>On the Mac, use the Cmd key instead.</p>
+<h2 id="gif-recording">GIF Recording</h2>
+<p>With the argument <code>-gif</code>, followed by a filename, a screen recording will be saved into the given GIF file. Please exit the emulator before reading the GIF file.</p>
+<p>If the option <code>,wait</code> is specified after the filename, it will start recording on <code>POKE $9FB5,2</code>. It will capture a single frame on <code>POKE $9FB5,1</code> and pause recording on <code>POKE $9FB5,0</code>. <code>PEEK($9FB5)</code> returns a 128 if recording is enabled but not active.</p>
+<h2 id="basic-and-the-screen-editor">BASIC and the Screen Editor</h2>
+<p>On startup, the X16 presents direct mode of BASIC V2. You can enter BASIC statements, or line numbers with BASIC statements and <code>RUN</code> the program, just like on Commodore computers.</p>
+<ul>
+<li>To stop execution of a BASIC program, hit the RUN/STOP key (Esc in the emulator), or Ctrl + C.</li>
+<li>To insert a character, press Shift + Backspace.</li>
+<li>To clear the screen, press Shift + Home.</li>
+<li>The X16 does not have a STOP+RESTORE function.</li>
+</ul>
 <h2 id="host-filesystem-interface">Host Filesystem Interface</h2>
 <p>If the system ROM contains any version of the KERNAL, the LOAD (<code>$FFD5</code>) and SAVE (<code>$FFD8</code>) KERNAL calls are intercepted by the emulator if the device is 1 (which is the default). So the BASIC statements</p>
 <pre><code>  LOAD&quot;$
@@ -241,6 +283,8 @@
 </table>
 <p>When -debug is selected the No-Operation $FF will break into the debugger automatically.</p>
 <p>Effectively keyboard routines only work when the debugger is running normally. Single stepping through keyboard code will not work at present.</p>
+<h2 id="wiki">Wiki</h2>
+<p><a href="https://github.com/commanderx16/x16-emulator/wiki">https://github.com/commanderx16/x16-emulator/wiki</a></p>
 <h2 id="features">Features</h2>
 <ul>
 <li>CPU: Full 65C02 instruction set (improved "fake6502")</li>
@@ -255,13 +299,12 @@
 <li>PS/2 keyboard</li>
 <li>SD card (SPI)</li>
 </ul></li>
-<li>A 60 Hz interrupt is injected independently of the VIA settings.</li>
 </ul>
 <h2 id="missing-features">Missing Features</h2>
 <ul>
 <li>VERA
 <ul>
-<li>Does not support IRQs</li>
+<li>Does not support raster IRQs (does support VSYNC though)</li>
 <li>Does not support the "CURRENT_FIELD" bit</li>
 <li>Does not sprite z-depth, collisions or limitations</li>
 <li>Only supports the first 16 sprites</li>
@@ -279,7 +322,59 @@
 </ul>
 <h2 id="license">License</h2>
 <p>Copyright (c) 2019 Michael Steil &lt;<a href="mailto:mist64@mac.com">mist64@mac.com</a>&gt;, <a href="https://www.pagetable.com/">www.pagetable.com</a>. All rights reserved. License: 2-clause BSD</p>
+<h2 id="known-issues">Known Issues</h2>
+<ul>
+<li>Emulator: LOAD"$ (and LOAD"$",1) will show host uppercase filenames as garbage. Use Ctrl+N to switch to the X16 upper/lower character set for a workaround.</li>
+</ul>
 <h2 id="release-notes">Release Notes</h2>
+<h3 id="release-33">Release 33</h3>
+<ul>
+<li>significant performance optimizations</li>
+<li>VERA
+<ul>
+<li>enabled all 128 sprites</li>
+<li>correct sprite zdepth</li>
+<li>support for raster IRQs</li>
+</ul></li>
+<li>SDL controller support using <code>-joy1</code> and <code>-joy2</code> [John J Bliss]</li>
+<li>65C02 BSD fixes [Norman B. Lancaster]</li>
+<li>feature parity with new LOAD/VLOAD features [John-Paul Gignac]</li>
+<li>default RAM and ROM banks are now 0, matching the hardware</li>
+<li>GIF recording can now be controlled from inside the machine [Randall Bohn]</li>
+<li>Debugging
+<ul>
+<li>Major enhancements to the debugger [kktos]</li>
+<li><code>-echo</code> will now encode non-printable characters like this: \X93 for CHR$(93), -bas as well as pasting accepts this convention again</li>
+<li><code>-echo raw</code> for the original behavior</li>
+<li><code>-echo iso</code> to for correct character encoding in ISO mode</li>
+<li><code>-ram</code> to specify RAM size; now defaults to 512</li>
+</ul></li>
+</ul>
+<h3 id="release-32">Release 32</h3>
+<ul>
+<li>correct ROM banking</li>
+<li>VERA emulation optimizations [Stephen Horn]</li>
+<li>added <code>-dump</code> option to allow writing RAM, CPU state or VERA state to disk [Nils Hasenbanck]</li>
+<li>added <code>-quality</code> option to change scaling algorithm; now defaults to "best" [Maurizio Porrato]</li>
+<li>output of <code>-echo</code> can now be fed into UNIX pipes [Anonymous Maarten]</li>
+<li>relative speed of emulator is shown in the title if host can't keep up [Rien]</li>
+<li>fix: 6502 BCD arithmetic [Rien]</li>
+<li>fix: colors (white is now white) [Rien]</li>
+<li>fix: sprite flipping [jjbliss]</li>
+</ul>
+<h3 id="release-31">Release 31</h3>
+<ul>
+<li>VERA 0.8 register layout</li>
+<li>removed "-char" (character ROM is now part of rom.bin)</li>
+<li>GIF recording using -gif [Neil Forbes-Richardson]</li>
+<li>numpad support [Maurizio Porrato]</li>
+<li>fake support of VIA timers to work around BASIC RND(0)</li>
+<li>default ROM is taken from executable's directory [Michael Watters]</li>
+<li>emulator window has a title [Michael Watters]</li>
+<li>-debug allows specifying a breakpoint [Frank Buss]</li>
+<li>package contains the ROM symbols in rom.txt</li>
+<li>support for VERA SPI</li>
+</ul>
 <h3 id="release-30">Release 30</h3>
 <p>Emulator:</p>
 <ul>
@@ -463,5 +558,6 @@ SAVE&quot;TETRIS.PRG
 <li>6502 core, fake PS/2 keyboard emulation (PS/2 data bytes appear at VIA#1 PB) and text mode Vera emulation</li>
 <li>KERNAL/BASIC modified for memory layout, missing VIC, Vera text mode and PS/2 keyboard</li>
 </ul>
+<!-------------------------------------------------------------------->
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>X16 Programmer's Reference Guide</title>
+  <title>Commander X16 Programmer's Reference Guide</title>
   <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -24,9 +24,12 @@
 <!-- generated with https://github.com/ekalinin/github-markdown-toc -->
 
 <ul>
+<li><a href="#overview">Overview</a></li>
 <li><a href="#basic-programming">BASIC Programming</a>
 <ul>
 <li><a href="#commodore-64-compatibility">Commodore 64 Compatibility</a></li>
+<li><a href="#iso-mode">ISO Mode</a></li>
+<li><a href="#new-control-characters">New Control Characters</a></li>
 <li><a href="#new-statements-and-functions">New Statements and Functions</a>
 <ul>
 <li><a href="#dos">DOS</a></li>
@@ -62,6 +65,37 @@
 <li><a href="#sound-programming">Sound Programming</a></li>
 <li><a href="#io-programming">I/O Programming</a></li>
 </ul>
+<h2 id="overview">Overview</h2>
+<p>The Commander X16 is a modern home computer in the philosophy of Commodore computers like the VIC-20 and the C64.</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>8-bit 65C02 CPU at 8 MHz</li>
+<li>2 MB RAM</li>
+<li>128 KB ROM</li>
+<li>VERA video controller
+<ul>
+<li>up to 640x480 resolution</li>
+<li>256 colors from a palette of 4096</li>
+<li>128 sprites</li>
+<li>VGA, NTSC and RGB output</li>
+</ul></li>
+<li><em>[sound controller TBD]</em></li>
+<li>Connectivity:
+<ul>
+<li>PS/2 keyboard and mouse</li>
+<li>2 NES/SNES controllers</li>
+<li>SD card</li>
+<li>Commodore Serial Bus ("IEC")</li>
+<li>several free GPIOs ("user port")</li>
+</ul></li>
+</ul>
+<p>As a modern sibling of the line of Commodore home computers, the Commander X16 is resaonably compatible with computers of that line.</p>
+<ul>
+<li>Pure BASIC programs are fully backwards compatible with the VIC-20 and the C64.</li>
+<li>Most PEEKs and POKEs of addresses in the $0000-$0340 area are compatible with the C64.</li>
+<li>POKEs for video and audio are not compatible with any Commodore computer. (There are no VIC or SID controllers, for example.)</li>
+<li>Pure machine language programs ($FF81+ KERNAL API) are compatible with Commodore computers.</li>
+</ul>
 <h2 id="basic-programming">BASIC Programming</h2>
 <h3 id="commodore-64-compatibility">Commodore 64 Compatibility</h3>
 <p>The Commander X16 BASIC interpreter is 100% backwards-compatible with the Commodore 64 one. This includes the following features:</p>
@@ -75,6 +109,7 @@
 <li><code>CHR$(5)</code>: white text</li>
 <li><code>CHR$(18)</code>: reverse</li>
 <li><code>CHR$(14)</code>: switch to upper/lowercase font</li>
+<li><code>CHR$(142)</code>: switch to uppercase/graphics font</li>
 </ul></li>
 </ul>
 <p>Because of the differences in hardware, the following functions and statements are incompatible between C64 and X16 BASIC programs.</p>
@@ -85,6 +120,105 @@
 <li><code>SYS</code>: execute machine language code</li>
 </ul>
 <p>The BASIC interpreter also currently shares all problems of the C64 version, like the slow garbage collector.</p>
+<h3 id="iso-mode">ISO Mode</h3>
+<p>In addition to PETSCII, the X16 also supports the ISO-8859-15 character encoding. In ISO-8859-15 mode ("ISO mode"):</p>
+<ul>
+<li>The character set is switched from Commodore-style (with PETSCII drawing characters) to a new ASCII/ISO-8859-15 compatible set, which covers most Western European writing systems.</li>
+<li>The encoding (<code>CHR$()</code> in BASIC and <code>BSOUT</code> in machine language) now complies with ASCII and ISO-8859-15.</li>
+<li>The keyboard driver will return ASCII/ISO-8859-15 codes.</li>
+</ul>
+<p>This is the encoding:</p>
+<pre><code>   0123456789ABCDEF
+0x|                |
+1x|                |
+2x| !&quot;#$%&amp;&#39;()*+,-./|
+3x|0123456789:;&lt;=&gt;?|
+4x|@ABCDEFGHIJKLMNO|
+5x|PQRSTUVWXYZ[\]^_|
+6x|`abcdefghijklmno|
+7x|pqrstuvwxyz{|}~ |
+8x|                |
+9x|                |
+Ax| ¡¢£€¥Š§š©ª«¬ ®¯|
+Bx|°±²³Žµ¶·ž¹º»ŒœŸ¿|
+Cx|ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏ|
+Dx|ÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞß|
+Ex|àáâãäåæçèéêëìíîï|
+Fx|ðñòóôõö÷øùúûüýþÿ|
+</code></pre>
+<p>ISO mode can be enabled and disabled using two new control codes:</p>
+<ul>
+<li><code>CHR$($0F)</code>: enable ISO mode</li>
+<li><code>CHR$($8F)</code>: disable ISO mode (default)</li>
+</ul>
+<p>You can also enable ISO mode in direct mode by pressing Ctrl+<code>O</code>.</p>
+<p><strong>Important:</strong> In ISO mode, BASIC keywords need to be written in upper case, that is, they have to be entered with the Shift key down, and abbreviating keywords is no longer possible.</p>
+<h3 id="new-control-characters">New Control Characters</h3>
+<p>The following PETSCII control characters have been added compared to the C64:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Descrption</th>
+<th>Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>$09</td>
+<td>TAB</td>
+<td>same as on C128/C65; key code only</td>
+</tr>
+<tr class="even">
+<td>$0F</td>
+<td>enable ISO mode</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>$10</td>
+<td>F9</td>
+<td>same as on C65</td>
+</tr>
+<tr class="even">
+<td>$18</td>
+<td>Shift + TAB</td>
+<td>same as on C128/C65; key code only</td>
+</tr>
+<tr class="odd">
+<td>$15</td>
+<td>F10</td>
+<td>same as on C65</td>
+</tr>
+<tr class="even">
+<td>$16</td>
+<td>F11</td>
+<td>same as on C65</td>
+</tr>
+<tr class="odd">
+<td>$17</td>
+<td>F12</td>
+<td>same as on C65</td>
+</tr>
+<tr class="even">
+<td>$83</td>
+<td>RUN</td>
+<td>same as on C65</td>
+</tr>
+<tr class="odd">
+<td>$84</td>
+<td>HELP</td>
+<td>same as on C65</td>
+</tr>
+<tr class="even">
+<td>$8F</td>
+<td>disable ISO mode</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Some of these codes are also supported on the C128 or the C65.</p>
+<h3 id="keyboard-layouts">Keyboard Layouts</h3>
+<p>Pressing the <code>F9</code> key cycles through the available keyboard layouts.</p>
 <h3 id="new-statements-and-functions">New Statements and Functions</h3>
 <p>There are several new statement and functions. Note that all BASIC keywords (such as <code>FOR</code>) get converted into tokens (such as <code>$81</code>), and the tokens for the new keywords have not been finalized yet. Therefore, loading BASIC program saved from a different revision of BASIC may mix up keywords.</p>
 <h4 id="dos">DOS</h4>
@@ -97,9 +231,15 @@
 <li>Any other argument will be sent as a DOS command.</li>
 </ul>
 <p><strong>EXAMPLES of DOS Statement:</strong></p>
-<pre><code>  DOS&quot;$&quot; : REM SHOWS DIRECTORY
+<pre><code>  DOS&quot;$&quot;          : REM SHOWS DIRECTORY
   DOS&quot;S:BAD_FILE&quot; : REM DELETES &quot;BAD_FILE&quot;
-  DOS : PRINTS DOS STATUS, E.G. &quot;01,FILES SCRATCHED,01,00&quot;
+  DOS             : REM PRINTS DOS STATUS, E.G. &quot;01,FILES SCRATCHED,01,00&quot;
+</code></pre>
+<h4 id="old">OLD</h4>
+<p><strong>TYPE: Command</strong> <strong>FORMAT: OLD</strong></p>
+<p><strong>Action:</strong> This command recovers the BASIC program in RAM that has been previously deleted using the <code>NEW</code> command or through a RESET.</p>
+<p><strong>EXAMPLE of OLD Statement:</strong></p>
+<pre><code>  OLD
 </code></pre>
 <h4 id="mon">MON</h4>
 <p><strong>TYPE: Command</strong> <strong>FORMAT: MON</strong></p>
@@ -111,14 +251,14 @@
 <p><strong>TYPE: Integer Function</strong> <strong>FORMAT: VPEEK (&lt;bank&gt;, &lt;address&gt;)</strong></p>
 <p><strong>Action:</strong> Return a byte from the video address space. The video address space has 20 bit addresses, which is exposed as 16 banks of 65536 addresses each.</p>
 <p><strong>EXAMPLE of VPEEK Statement:</strong></p>
-<pre><code>  PRINT (VPEEK(4,0) AND $E0) / 32 : REM PRINTS THE CURRENT MODE (0-7)
+<pre><code>  PRINT (VPEEK($F,$2000) AND $E0) / 32 : REM PRINTS THE CURRENT MODE (0-7)
 </code></pre>
 <h4 id="vpoke">VPOKE</h4>
 <p><strong>TYPE: Command</strong> <strong>FORMAT: VPOKE &lt;bank&gt;, &lt;address&gt;, &lt;value&gt;</strong></p>
 <p><strong>Action:</strong> Set a byte in the video address space. The video address space has 20 bit addresses, which is exposed as 16 banks of 65536 addresses each.</p>
 <p><strong>EXAMPLE of VPOKE Statement:</strong></p>
 <pre><code>  VPOKE 0,1,1 * 16 + 2 : REM SETS THE COLORS OF THE CHARACTER
-  REM AT 0/0 TO RED ON WHITE
+                         REM AT 0/0 TO RED ON WHITE
 </code></pre>
 <h3 id="other-new-features">Other New Features</h3>
 <p>The numeric constants parser supports both hex (<code>$</code>) and binary (<code>%</code>) literals, like this:</p>
@@ -175,6 +315,22 @@
 <li>simple memory management</li>
 <li>timekeeping</li>
 </ul>
+<h3 id="kernal-version">KERNAL Version</h3>
+<p>The KERNAL version can be read from location $FF80 in ROM. A value of $FF indicates a custom build. All other values encode the build number. Positive numbers are release versions ($02 = release version 2), two's complement negative numbers are prerelease versions ($FE = $100 - 2 = prerelease version 2).</p>
+<h3 id="compatibility-considerations">Compatibility Considerations</h3>
+<p>For applications to remain compatible between different versions of the ROM, they can rely upon:</p>
+<ul>
+<li>the KERNAL API</li>
+</ul>
+<p>The following is guaranteed to remain mostly stable:</p>
+<ul>
+<li>the $0000-$03FF memory layout</li>
+</ul>
+<p>And the following features must not be relied upon:</p>
+<ul>
+<li>direct function offsets in the ROM</li>
+</ul>
+<p>That is, don't jump into undocumented ROM code directly, or reuse undocumented data constants in ROM.</p>
 <h3 id="commodore-64-api-compatibility">Commodore 64 API Compatibility</h3>
 <p>The KERNAL fully supports the C64 KERNAL API.</p>
 <p><strong>Channel I/O:</strong> $FF90: <code>SETMSG</code> – set verbosity $FFB7: <code>READST</code> – return status byte $FFBA: <code>SETLFS</code> – set LA, FA and SA $FFBD: <code>SETNAM</code> – set filename $FFC0: <code>OPEN</code> – open a channel $FFC3: <code>CLOSE</code> – close a channel $FFC6: <code>CHKIN</code> – set channel for character input $FFC9: <code>CHKOUT</code> – set channel for character output $FFCC: <code>CLRCHN</code> – restore character I/O to screen/keyboard $FFCF: <code>BASIN</code> – get character $FFD2: <code>BSOUT</code> – write character $FFD5: <code>LOAD</code> – load a file into memory $FFD8: <code>SAVE</code> – save a file from memory $FFE7: <code>CLALL</code> – close all channels</p>
@@ -226,22 +382,6 @@
 <h3 id="new-api-for-the-commander-x16">New API for the Commander X16</h3>
 <p>There are a few new APIs. Please note that their addresses and their behavior is still prelimiary and can change between revisions.</p>
 <p>$FF00: <code>MONITOR</code> – enter montior $FF06: <code>GETJOY</code> – query joysticks $FF6E: <code>JSRFAR</code> – gosub in another bank</p>
-<h3 id="kernal-version">KERNAL Version</h3>
-<p>The KERNAL version can be read from location $FF80 in ROM. A value of $FF indicates a custom build. All other values encode the build number. Positive numbers are release versions ($02 = release version 2), two's complement negative numbers are prerelease versions ($FE = $100 - 2 = prerelease version 2).</p>
-<h3 id="compatibility-considerations">Compatibility Considerations</h3>
-<p>For applications to remain compatible between different versions of the ROM, they can rely upon:</p>
-<ul>
-<li>the KERNAL API</li>
-</ul>
-<p>The following is guaranteed to remain mostly stable:</p>
-<ul>
-<li>the $0000-$03FF memory layout</li>
-</ul>
-<p>And the following features must not be relied upon:</p>
-<ul>
-<li>direct function offsets in the ROM</li>
-</ul>
-<p>That is, don't jump into undocumented ROM code directly, or reuse undocumented data constants in ROM.</p>
 <h4 id="function-name-getjoy">Function Name: GETJOY</h4>
 <p>Purpose: Query the joysticks and store their state in the zeropage Call address: $FF06 (hex) 65286 (decimal) Communication registers: None Preparatory routines: None Error returns: None Stack requirements: 0 Registers affected: .A, .X, .Y</p>
 <p><strong>Description:</strong> The routine <code>GETJOY</code> retrieves all state from the two joysticks and stores it in the zeropage locations <code>JOY1</code> ($EF-$F1) and <code>JOY2</code> ($F2-$F4).</p>
@@ -365,6 +505,7 @@
 </code></pre>
 <h2 id="machine-language-monitor">Machine Language Monitor</h2>
 <p>The built-in machine language monitor can be started with the <code>MON</code> BASIC command. It is based on the monitor of the Final Cartridge III and supports all its features. See the <a href="https://rr.pokefinder.org/rrwiki/images/7/70/Final_Cartridge_III_english_Manual.pdf">Final Cartridge III Manual</a> more more information.</p>
+<p>If you invoke the monitor by mistake, you can exit with by typing <code>X</code>, followed by the <code>RETURN</code> key.</p>
 <p>Some features specific to this monitor are:</p>
 <ul>
 <li>The <code>I</code> command prints a CBM-ASCII-encoded memory dump.</li>
@@ -374,13 +515,13 @@
 <p>The following additions have been made:</p>
 <ul>
 <li><p>The instruction set extensions of the 65C02 are supported.</p></li>
-<li><p>The <code>O</code> command takes an 8 bit hex value as an argument and sets it as the ROM and RAM bank for reading and writing memory contents. The following example disassembles the beginning of the DOS ROM on bank 2:</p>
-<pre><code>O02
+<li><p>The <code>O</code> command takes an 8 bit hex value as an argument and sets it as the ROM and RAM bank for reading and writing memory contents. The following example disassembles the beginning of the CBDOS ROM on bank 5:</p>
+<pre><code>O05
 DC000 C015
 </code></pre></li>
 <li><p>The <code>OV</code> command takes a 4 bit hex value as an argument and sets it as the bank in the video address space for reading and writing memory contents. The following example shows the character ROM in the video controller's address space:</p>
-<pre><code>OV2
-EC0000 000F
+<pre><code>OV1
+ECF000 F00F
 </code></pre></li>
 </ul>
 <p><em>[TODO: Full documentation]</em></p>
@@ -408,19 +549,15 @@ EC0000 000F
 <td>Banked RAM (8 KB window into one of 256 banks for a total of 2 MB)</td>
 </tr>
 <tr class="even">
-<td>$C000-$DFFF</td>
-<td>Banked ROM (8 KB window into one of 8 banks for a total of 64 KB)</td>
-</tr>
-<tr class="odd">
-<td>$E000-$FFFF</td>
-<td>Fixed ROM (KERNAL)</td>
+<td>$C000-$FFFF</td>
+<td>Banked ROM (16 KB window into one of 8 banks for a total of 128 KB)</td>
 </tr>
 </tbody>
 </table>
 <h3 id="banked-memory">Banked Memory</h3>
-<p>The RAM bank (0-255) defaults to 255, and the ROM bank (0-7) defaults to 7 on RESET. The RAM bank can be configured through VIA#1 PA0-7 ($9F61), and the ROM bank through VIA#1 PB0-2 ($9F60). The section "I/O Programming" for more information.</p>
+<p>The RAM bank (0-255) defaults to 255, and the ROM bank (0-7) defaults to 7 on RESET. The RAM bank can be configured through VIA#1 PA0-7 ($9F61), and the ROM bank through VIA#1 PB0-2 ($9F60). See section "I/O Programming" for more information.</p>
 <h3 id="rom-allocations">ROM Allocations</h3>
-<p>The fixed ROM at $E000-$FFFF contains the KERNAL. This is the allocation of the banks of banked ROM:</p>
+<p>This is the allocation of the banks of banked ROM:</p>
 <table>
 <thead>
 <tr class="header">
@@ -433,25 +570,36 @@ EC0000 000F
 <tr class="odd">
 <td>0</td>
 <td>BASIC</td>
-<td>The BASIC interpreter</td>
+<td>BASIC interpreter</td>
 </tr>
 <tr class="even">
-<td>1</td>
-<td>UTIL</td>
-<td>Utilities like the machine language monitor</td>
+<td>1-3</td>
+<td>–</td>
+<td><em>[Currently unused]</em></td>
 </tr>
 <tr class="odd">
-<td>2</td>
-<td>DOS</td>
-<td>The computer-based CBM-DOS for FAT32 SD cards</td>
+<td>4</td>
+<td>GEOS</td>
+<td>GEOS KERNAL</td>
 </tr>
 <tr class="even">
-<td>3-7</td>
-<td>–</td>
-<td><em>[Currently unassigned]</em></td>
+<td>5</td>
+<td>CBDOS</td>
+<td>The computer-based CBM-DOS for FAT32 SD cards</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>KEYMAP</td>
+<td>Keyboard layout tables</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>KERNAL</td>
+<td>character sets (uploaded into VRAM), MONITOR, KERNAL</td>
 </tr>
 </tbody>
 </table>
+<p><strong>Important</strong>: The layout of the banks is still constantly changing.</p>
 <h3 id="ram-contents">RAM Contents</h3>
 <p>This is the allocation of fixed RAM in the KERNAL/BASIC environment.</p>
 <table>
@@ -471,7 +619,7 @@ EC0000 000F
 <td>CPU stack</td>
 </tr>
 <tr class="odd">
-<td>$0000-$03FF</td>
+<td>$0000-$07FF</td>
 <td>KERNAL and BASIC variables</td>
 </tr>
 <tr class="even">
@@ -489,7 +637,7 @@ EC0000 000F
 </thead>
 <tbody>
 <tr class="odd">
-<td>$0000-$0003</td>
+<td>$0000-$0002</td>
 </tr>
 <tr class="even">
 <td>$00FB-$00FE</td>
@@ -581,7 +729,15 @@ EC0000 000F
 </table>
 <h2 id="video-programming">Video Programming</h2>
 <p>The VERA video chip supports resolutions up to 640x480 with up to 256 colors from a palette of 4096, two layers of either a bitmap or tiles, 128 sprites of up to 64x64 pixels in size. It can output VGA as well as a 525 line interlaced signal, either as NTSC or as RGB (Amiga-style).</p>
-<p>See <a href="https://github.com/commanderx16/x16-docs/blob/master/vera-module%20v0.7.pdf">vera-module v0.7.pdf</a> for the complete reference. Please note that the layout of registers is far from finalized.</p>
+<p>See the <a href="VERA%20Programmer&#39;s%20Reference.html">VERA Programmer's Reference</a> for the complete reference.</p>
+<p><strong>IMPORTANT</strong>: The VERA register layout has changed between 0.7 and 0.8. Here is the old documentation: <a href="https://github.com/commanderx16/x16-docs/blob/master/old/vera-module%20v0.7.pdf">vera-module v0.7.pdf</a></p>
+<p>The KERNAL uploads the three character sets to:</p>
+<ul>
+<li>$1E800: ISO-8859-15 (2 KB)</li>
+<li>$1F000: PETSCII upper case/graphics (2 KB)</li>
+<li>$1F800: PETSCII upper/lower case (2 KB)</li>
+</ul>
+<p>Application software is free to reuse this part of video RAM if it does not need the character sets. If it needs them again later, it can use the KERNAL call <code>CINT</code> ($FF81), which initializes the VERA chip and uploads the character sets.</p>
 <h2 id="sound-programming">Sound Programming</h2>
 <p><em>[TODO]</em></p>
 <h2 id="io-programming">I/O Programming</h2>
