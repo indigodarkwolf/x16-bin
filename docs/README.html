@@ -24,12 +24,14 @@
 <p><a href="https://travis-ci.org/commanderx16/x16-emulator"><img src="https://travis-ci.org/commanderx16/x16-emulator.svg?branch=master" alt="Build Status" /></a> <a href="https://github.com/commanderx16/x16-emulator/releases"><img src="https://img.shields.io/github/v/release/commanderx16/x16-emulator" alt="Release" /></a> <a href="./LICENSE"><img src="https://img.shields.io/github/license/commanderx16/x16-emulator" alt="License: BSD-Clause" /></a> <a href="https://github.com/commanderx16/x16-emulator/graphs/contributors"><img src="https://img.shields.io/github/contributors/commanderx16/x16-emulator.svg" alt="Contributors" /></a></p>
 <p>This is an emulator for the Commander X16 computer system. It only depends on SDL2 and should compile on all modern operating systems.</p>
 <h2 id="binaries--compiling">Binaries &amp; Compiling</h2>
-<p>Binary releases for MacOS, Windows and x86_64 Linux are available on the <a href="https://github.com/commanderx16/x16-emulator/releases">releases page</a>.</p>
+<p>Binary releases for macOS, Windows and x86_64 Linux are available on the <a href="https://github.com/commanderx16/x16-emulator/releases">releases page</a>.</p>
 <p>The emulator itself is dependent only on SDL2. However, to run the emulated system you will also need a compatible <code>rom.bin</code> ROM image. This will be loaded from the directory containing the emulator binary, or you can use the <code>-rom .../path/to/rom.bin</code> option.</p>
 <blockquote>
 <p><strong>WARNING:</strong> Older versions of the ROM might not work in newer versions of the emulator, and vice versa.</p>
 </blockquote>
-<p>You can build a ROM image yourself using the <a href="https://github.com/commanderx16/x16-rom#releases-and-building">build instructions</a> in the <a href="https://github.com/commanderx16/x16-rom">x16rom</a> repo. The <code>rom.bin</code> included in the <a href="https://github.com/commanderx16/x16-emulator/releases"><em>latest</em> release</a> of the emulator may also work with the HEAD of this repo, but this is not guaranteed.</p>
+<p>You can build a ROM image yourself using the <a href="https://github.com/commanderx16/x16-rom#releases-and-building">build instructions</a> in the [x16-rom] repo. The <code>rom.bin</code> included in the <a href="https://github.com/commanderx16/x16-emulator/releases"><em>latest</em> release</a> of the emulator may also work with the HEAD of this repo, but this is not guaranteed.</p>
+<h3 id="macos-build">macOS Build</h3>
+<p>Install SDL2 using <code>brew install sdl2</code>.</p>
 <h3 id="linux-build">Linux Build</h3>
 <p>The SDL2 development package is available as a distribution package with most major versions of Linux:</p>
 <ul>
@@ -49,6 +51,7 @@
 <li><code>-prg</code> lets you specify a <code>.prg</code> file that gets injected into RAM after start.</li>
 <li><code>-bas</code> lets you specify a BASIC program in ASCII format that automatically typed in (and tokenized).</li>
 <li><code>-run</code> executes the application specified through <code>-prg</code> or <code>-bas</code> using <code>RUN</code> or <code>SYS</code>, depending on the load address.</li>
+<li><code>-geos</code> launches GEOS at startup.</li>
 <li><code>-scale</code> scales video output to an integer multiple of 640x480</li>
 <li><code>-echo</code> causes all KERNAL/BASIC output to be printed to the host's terminal. Enable this and use the BASIC command "LIST" to convert a BASIC program to ASCII (detokenize).</li>
 <li><code>-gif &lt;filename&gt;[,wait]</code> to record the screen into a GIF. See below for more info.</li>
@@ -240,7 +243,34 @@
 <p>Please see the KERNAL/BASIC documentation.</p>
 <h2 id="debugger">Debugger</h2>
 <p>The debugger requires <code>-debug</code> to start. Without it it is effectively disabled.</p>
-<p>There are 2 panels you can control. The code panel, the top left half, and the data panel, the bottom half of the screen. The displayed address can be changed using keys 0-9 and A-F, in a 'shift and roll' manner (easier to see than explain). To change the data panel address, press the shift key and type 0-9 A-F. The top write panel is fixed.</p>
+<p>There are 2 panels you can control. The code panel, the top left half, and the data panel, the bottom half of the screen. You can also edit the contents of the registers PC, A, X, Y, and SP.</p>
+<p>The debugger uses its own command line with the following syntax:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Statement</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>d %x</td>
+<td>Change the code panel to view disassembly starting from the address %x.</td>
+</tr>
+<tr class="even">
+<td>m %x</td>
+<td>Change the data panel to view memory starting from the address %x.</td>
+</tr>
+<tr class="odd">
+<td>b %s %d</td>
+<td>Changes the current memory bank for disassembly and data. The %s param can be either 'ram' or 'rom', the %d is the memory bank to display.</td>
+</tr>
+<tr class="even">
+<td>r %s %x</td>
+<td>Changes the value in the specified register. Valid registers in the %s param are 'pc', 'a', 'x', 'y', and 'sp'. %x is the value to store in that register.</td>
+</tr>
+</tbody>
+</table>
 <p>The debugger keys are similar to the Microsoft Debugger shortcut keys, and work as follows</p>
 <table>
 <thead>
@@ -338,6 +368,28 @@
 <li>Emulator: LOAD"$ (and LOAD"$",1) will show host uppercase filenames as garbage. Use Ctrl+N to switch to the X16 upper/lower character set for a workaround.</li>
 </ul>
 <h2 id="release-notes">Release Notes</h2>
+<h3 id="release-35">Release 35</h3>
+<ul>
+<li>video optimization [Neil Forbes-Richardson]</li>
+<li>added '-geos' to launch GEOS on startup</li>
+<li>added '-test' to launch (graphics) unit test on startup</li>
+<li>debugger
+<ul>
+<li>switch viewed RAM/ROM bank with numpad + and numpad - [Kobrasadetin]</li>
+<li>optimized character printing [Kobrasadetin]</li>
+</ul></li>
+<li>trace mode:
+<ul>
+<li>prepend ROM bank to address in trace</li>
+<li>also prints 16 bit virtual regs (graph/GEOS)</li>
+</ul></li>
+<li>fixes
+<ul>
+<li>initialize memory to 0 [Kobrasadetin]</li>
+<li>fixed SYS hex argument</li>
+<li>disabled "buffer full, skipping" and SD card debug text, it was too noisy</li>
+</ul></li>
+</ul>
 <h3 id="release-34">Release 34</h3>
 <ul>
 <li>PS/2 mouse</li>
