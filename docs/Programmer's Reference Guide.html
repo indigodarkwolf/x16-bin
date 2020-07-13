@@ -24,6 +24,8 @@
 <!-- generated with https://github.com/ekalinin/github-markdown-toc -->
 
 <ul>
+<li><a href="#commander-x16-programmers-reference-guide">Commander X16 Programmer's Reference Guide</a>
+<ul>
 <li><a href="#overview">Overview</a></li>
 <li><a href="#basic-programming">BASIC Programming</a>
 <ul>
@@ -47,6 +49,7 @@
 <li><a href="#old">OLD</a></li>
 <li><a href="#pset">PSET</a></li>
 <li><a href="#rect">RECT</a></li>
+<li><a href="#reset">RESET</a></li>
 <li><a href="#screen">SCREEN</a></li>
 <li><a href="#vpeek">VPEEK</a></li>
 <li><a href="#vpoke">VPOKE</a></li>
@@ -78,21 +81,27 @@
 <li><a href="#function-name-joystick_scan">Function Name: joystick_scan</a></li>
 <li><a href="#function-name-joystick_get">Function Name: joystick_get</a></li>
 </ul></li>
-<li><a href="#low-level-graphics">Low-Level Graphics</a>
+<li><a href="#sprites">Sprites</a>
 <ul>
-<li><a href="#function-name-graph_ll_init">Function Name: GRAPH_LL_init</a></li>
-<li><a href="#function-name-graph_ll_get_info">Function Name: GRAPH_LL_get_info</a></li>
-<li><a href="#function-name-graph_ll_cursor_position">Function Name: GRAPH_LL_cursor_position</a></li>
-<li><a href="#function-name-graph_ll_cursor_next_line">Function Name: GRAPH_LL_cursor_next_line</a></li>
-<li><a href="#function-name-graph_ll_get_pixel">Function Name: GRAPH_LL_get_pixel</a></li>
-<li><a href="#function-name-graph_ll_get_pixels">Function Name: GRAPH_LL_get_pixels</a></li>
-<li><a href="#function-name-graph_ll_set_pixel">Function Name: GRAPH_LL_set_pixel</a></li>
-<li><a href="#function-name-graph_ll_set_pixels">Function Name: GRAPH_LL_set_pixels</a></li>
-<li><a href="#function-name-graph_ll_set_8_pixels">Function Name: GRAPH_LL_set_8_pixels</a></li>
-<li><a href="#function-name-graph_ll_set_8_pixels_opaque">Function Name: GRAPH_LL_set_8_pixels_opaque</a></li>
-<li><a href="#function-name-graph_ll_fill_pixels">Function Name: GRAPH_LL_fill_pixels</a></li>
-<li><a href="#function-name-graph_ll_filter_pixels">Function Name: GRAPH_LL_filter_pixels</a></li>
-<li><a href="#function-name-graph_ll_move_pixels">Function Name: GRAPH_LL_move_pixels</a></li>
+<li><a href="#function-name-sprite_set_image">Function Name: sprite_set_image</a></li>
+<li><a href="#function-name-sprite_set_position">Function Name: sprite_set_position</a></li>
+</ul></li>
+<li><a href="#framebuffer">Framebuffer</a>
+<ul>
+<li><a href="#function-name-fb_init">Function Name: FB_init</a></li>
+<li><a href="#function-name-fb_get_info">Function Name: FB_get_info</a></li>
+<li><a href="#function-name-fb_set_palette">Function Name: FB_set_palette</a></li>
+<li><a href="#function-name-fb_cursor_position">Function Name: FB_cursor_position</a></li>
+<li><a href="#function-name-fb_cursor_next_line">Function Name: FB_cursor_next_line</a></li>
+<li><a href="#function-name-fb_get_pixel">Function Name: FB_get_pixel</a></li>
+<li><a href="#function-name-fb_get_pixels">Function Name: FB_get_pixels</a></li>
+<li><a href="#function-name-fb_set_pixel">Function Name: FB_set_pixel</a></li>
+<li><a href="#function-name-fb_set_pixels">Function Name: FB_set_pixels</a></li>
+<li><a href="#function-name-fb_set_8_pixels">Function Name: FB_set_8_pixels</a></li>
+<li><a href="#function-name-fb_set_8_pixels_opaque">Function Name: FB_set_8_pixels_opaque</a></li>
+<li><a href="#function-name-fb_fill_pixels">Function Name: FB_fill_pixels</a></li>
+<li><a href="#function-name-fb_filter_pixels">Function Name: FB_filter_pixels</a></li>
+<li><a href="#function-name-fb_move_pixels">Function Name: FB_move_pixels</a></li>
 </ul></li>
 <li><a href="#graphics">Graphics</a>
 <ul>
@@ -109,10 +118,23 @@
 <li><a href="#function-name-graph_get_char_size">Function Name: GRAPH_get_char_size</a></li>
 <li><a href="#function-name-graph_put_char">Function Name: GRAPH_put_char</a></li>
 </ul></li>
+<li><a href="#console">Console</a>
+<ul>
+<li><a href="#function-name-console_init">Function Name: console_init</a></li>
+<li><a href="#function-name-console_put_char">Function Name: console_put_char</a></li>
+<li><a href="#function-name-console_put_image">Function Name: console_put_image</a></li>
+<li><a href="#function-name-console_get_char">Function Name: console_get_char</a></li>
+<li><a href="#function-name-console_set_paging_message">Function Name: console_set_paging_message</a></li>
+</ul></li>
 <li><a href="#other">Other</a>
 <ul>
+<li><a href="#function-name-memory_fill">Function Name: memory_fill</a></li>
+<li><a href="#function-name-memory_copy">Function Name: memory_copy</a></li>
+<li><a href="#function-name-memory_crc">Function Name: memory_crc</a></li>
+<li><a href="#function-name-memory_decompress">Function Name: memory_decompress</a></li>
 <li><a href="#function-name-monitor">Function Name: monitor</a></li>
-<li><a href="#function-name-scrmod">Function Name: scrmod</a></li>
+<li><a href="#function-name-screen_set_mode">Function Name: screen_set_mode</a></li>
+<li><a href="#function-name-screen_set_charset">Function Name: screen_set_charset</a></li>
 <li><a href="#function-name-jsrfar">Function Name: JSRFAR</a></li>
 </ul></li>
 </ul></li>
@@ -128,6 +150,7 @@
 <li><a href="#video-programming">Video Programming</a></li>
 <li><a href="#sound-programming">Sound Programming</a></li>
 <li><a href="#io-programming">I/O Programming</a></li>
+</ul></li>
 </ul>
 <h2 id="overview">Overview</h2>
 <p>The Commander X16 is a modern home computer in the philosophy of Commodore computers like the VIC-20 and the C64.</p>
@@ -219,9 +242,9 @@ Fx|ðñòóôõö÷øùúûüýþÿ|
 <h3 id="background-color">Background Color</h3>
 <p>In regular BASIC text mode, the video controller supports 16 foreground colors and 16 background colors for each character on the screen.</p>
 <p>The new "swap fg/bg color" code is useful to change the background color of the cursor, like this:</p>
-<pre><code>PRINT CHR$(2);   : REM SWAP FG/BG
+<pre><code>PRINT CHR$(1);   : REM SWAP FG/BG
 PRINT CHR$($1C); : REM SET FG COLOR TO RED
-PRINT CHR$(2);   : REM SWAP FG/BG
+PRINT CHR$(1);   : REM SWAP FG/BG
 </code></pre>
 <p>The new BASIC instruction <code>COLOR</code> makes this easier, but the trick above can also be used from machine code programs.</p>
 <p>To set the background color of the complete screen, it just has to be cleared after setting the color:</p>
@@ -574,10 +597,11 @@ PRINT CHR$(2);   : REM SWAP FG/BG
 40 NEXT
 </code></pre>
 <h4 id="mon">MON</h4>
-<p><strong>TYPE: Command</strong> <strong>FORMAT: MON</strong></p>
+<p><strong>TYPE: Command</strong> <strong>FORMAT: MON (Alternative: MONITOR)</strong></p>
 <p><strong>Action:</strong> This command enters the machine language monitor. See the dedicated chapter for a description.</p>
 <p><strong>EXAMPLE of MON Statement:</strong></p>
 <pre><code>  MON
+  MONITOR
 </code></pre>
 <h4 id="mouse">MOUSE</h4>
 <p><strong>TYPE: Command</strong> <strong>FORMAT: MOUSE &lt;mode&gt;</strong></p>
@@ -673,6 +697,12 @@ MOUSE 0 : REM DISABLE MOUSE
 20 FORI=1TO20:RECTRND(1)*320,RND(1)*200,RND(1)*320,RND(1)*200,RND(1)*256:NEXT
 30 GOTO20
 </code></pre>
+<h4 id="reset">RESET</h4>
+<p><strong>TYPE: Command</strong> <strong>FORMAT: RESET</strong></p>
+<p><strong>Action:</strong> Performs a software reset of the system.</p>
+<p><strong>EXAMPLE of RESET Statement:</strong></p>
+<pre><code>RESET
+</code></pre>
 <h4 id="screen">SCREEN</h4>
 <p><strong>TYPE: Command</strong> <strong>FORMAT: SCREEN &lt;mode&gt;</strong></p>
 <p><strong>Action:</strong> This command switches the screen mode. Modes $80 (128) and above are graphics modes.</p>
@@ -741,7 +771,7 @@ MOUSE 0 : REM DISABLE MOUSE
 <p>In BASIC, the contents of files can be directly loaded into VRAM with the <code>LOAD</code> statement. When a secondary address greater than one is used, the KERNAL will now load the file into the VERA's VRAM address space. The first two bytes of the file are used as lower 16 bits of the address. The upper 4 bits are <code>(SA-2) &amp; 0x0ff</code> where <code>SA</code> is the secondary address.</p>
 <p>Examples:</p>
 <pre><code>  10 REM LOAD VERA SETTINGS
-  20 LOAD&quot;VERA.BIN&quot;,1,18 : REM SET ADDRESS TO $FXXXX
+  20 LOAD&quot;VERA.BIN&quot;,1,17 : REM SET ADDRESS TO $FXXXX
   30 REM LOAD TILES
   40 LOAD&quot;TILES.BIN&quot;,1,3 : REM SET ADDRESS TO $1XXXX
   50 REM LOAD MAP
@@ -793,6 +823,7 @@ MOUSE 0 : REM DISABLE MOUSE
 <li>For device #8, the Commodore Peripheral Bus calls first talk to the "Computer DOS" built into the ROM to detect an SD card, before falling back to the Commodore Serial Bus.</li>
 <li>The <code>IOBASE</code> call returns $9F60, the location of the first VIA controller.</li>
 <li>The <code>SETTMO</code> call has been a no-op since the Commodore VIC-20, and has no function on the X16 either.</li>
+<li>The <code>MEMTOP</code> call additionally returns the number of available RAM banks in the .A register.</li>
 <li>The layout of the zero page ($0000-$00FF) and the KERNAL/BASIC variable space ($0200+) are generally <strong>not</strong> compatible with the C64.</li>
 <li>The vectors ($0300-$0333) are fully compatible with the C64.</li>
 </ul>
@@ -903,7 +934,7 @@ MOUSE 0 : REM DISABLE MOUSE
 <p>Purpose: Get the date and time Call address: $FF50 Communication registers: r0, r1, r2, r3L Preparatory routines: None Error returns: None Stack requirements: 0 Registers affected: .A, .X, .Y</p>
 <p><strong>Description:</strong> The routine <code>clock_get_date_time</code> returns the state of the system's real-time-clock. The register assignment is identical to <code>clock_set_date_time</code>.</p>
 <h4 id="mouse-1">Mouse</h4>
-<p>$FF68: <code>mouse_config</code> - configure mouse pointer $FF6B: <code>mouse_get</code> - get state of mouse</p>
+<p>$FF68: <code>mouse_config</code> - configure mouse pointer $FF71: <code>mouse_scan</code> - query mouse $FF6B: <code>mouse_get</code> - get state of mouse</p>
 <h5 id="function-name-mouse_config">Function Name: mouse_config</h5>
 <p>Purpose: Configure the mouse pointer Call address: $FF68 Communication registers: .A, .X Preparatory routines: None Error returns: None Stack requirements: 0 Registers affected: .A, .X, .Y</p>
 <p><strong>Description:</strong> The routine <code>mouse_config</code> configures the mouse pointer.</p>
@@ -913,6 +944,9 @@ MOUSE 0 : REM DISABLE MOUSE
 <pre><code>LDA #1
 JSR mouse_config ; show the default mouse pointer
 </code></pre>
+<h5 id="function-name-mouse_scan">Function Name: mouse_scan</h5>
+<p>Purpose: Query the mouse and save its state Call address: $FF71 Communication registers: None Preparatory routines: None Error returns: None Stack requirements: ? Registers affected: .A, .X, .Y</p>
+<p><strong>Description:</strong> The routine <code>mouse_scan</code> retrieves all state from the mouse and saves it. It can then be retrieved using <code>mouse_get</code>. The default interrupt handler already takes care of this, so this routine should only be called if the interrupt handler has been completely replaced.</p>
 <h5 id="function-name-mouse_get">Function Name: mouse_get</h5>
 <p>Purpose: Get the mouse state Call address: $FF6B Communication registers: .X Preparatory routines: <code>mouse_config</code> Error returns: None Stack requirements: 0 Registers affected: .A</p>
 <p><strong>Description:</strong> The routine <code>mouse_get</code> returns the state of the mouse. The caller passes the offset of a zero-page location in .X, which the routine will populate with the mouse position in 4 consecutive bytes:</p>
@@ -971,10 +1005,10 @@ BNE BUTTON_PRESSED
 <p>$FF53: <code>joystick_scan</code> - query joysticks $FF56: <code>joystick_get</code> - get state of one joystick</p>
 <h5 id="function-name-joystick_scan">Function Name: joystick_scan</h5>
 <p>Purpose: Query the joysticks and save their state Call address: $FF53 Communication registers: None Preparatory routines: None Error returns: None Stack requirements: 0 Registers affected: .A, .X, .Y</p>
-<p><strong>Description:</strong> The routine <code>joystick_scan</code> retrieves all state from the two joysticks and saves it. It can then be retrieved using <code>joystick_get</code>.</p>
+<p><strong>Description:</strong> The routine <code>joystick_scan</code> retrieves all state from the two joysticks and saves it. It can then be retrieved using <code>joystick_get</code>. The default interrupt handler already takes care of this, so this routine should only be called if the interrupt handler has been completely replaced.</p>
 <h5 id="function-name-joystick_get">Function Name: joystick_get</h5>
 <p>Purpose: Get the state of one of the joysticks Call address: $FF56 Communication registers: .A Preparatory routines: <code>joystick_scan</code> Error returns: None Stack requirements: 0 Registers affected: .A, .X, .Y</p>
-<p><strong>Description:</strong> The routine <code>joystick_get</code> retrieves all state from one of the joysticks. The number of the joystick is passed in .X (0 or 1), and the state is returned in .A, .X and .Y.</p>
+<p><strong>Description:</strong> The routine <code>joystick_get</code> retrieves all state from one of the joysticks. The number of the joystick is passed in .A (0 or 1), and the state is returned in .A, .X and .Y.</p>
 <pre><code>  .A, byte 0:      | 7 | 6 | 5 | 4 | 3 | 2 | 1 | 0 |
               NES  | A | B |SEL|STA|UP |DN |LT |RT |
               SNES | B | Y |SEL|STA|UP |DN |LT |RT |
@@ -1060,75 +1094,94 @@ BNE BUTTON_PRESSED
 <li>Note that bits 6 and 7 in byte 0 map to different buttons on NES and SNES.</li>
 </ul>
 <p><strong>How to Use:</strong></p>
+<p>If the default interrupt handler is used:</p>
+<ol>
+<li>Call this routine.</li>
+</ol>
+<p>If the default interrupt handler is disabled or replaced:</p>
 <ol>
 <li>Call <code>joystick_scan</code> to have the system query the joysticks.</li>
 <li>Call this routine.</li>
 </ol>
 <p><strong>EXAMPLE:</strong></p>
 <pre><code>  JSR joystick_scan
-  LDX #0
+  LDA #0
   JSR joystick_get
   AND #128
   BEQ NES_A_PRESSED
 </code></pre>
-<h4 id="low-level-graphics">Low-Level Graphics</h4>
-<p>The low-level graphics API completely abstracts the framebuffer by exposing a minimal set of high-performance functions. It is basically a framebuffer driver. It is useful as an abstraction and as a convenience library for applications that need high performance framebuffer access.</p>
-<p>$FEF6: <code>GRAPH_LL_init</code> - enable graphics mode $FEF9: <code>GRAPH_LL_get_info</code> - get screen size and color depth $FEFC: <code>GRAPH_LL_set_palette</code> - set (parts of) the palette $FEFF: <code>GRAPH_LL_cursor_position</code> - position the direct-access cursor $FF02: <code>GRAPH_LL_cursor_next_line</code> - move direct-access cursor to next line $FF05: <code>GRAPH_LL_get_pixel</code> - read one pixel, update cursor $FF08: <code>GRAPH_LL_get_pixels</code> - copy pixels into RAM, update cursor $FF0B: <code>GRAPH_LL_set_pixel</code> - set one pixel, update cursor $FF0E: <code>GRAPH_LL_set_pixels</code> - copy pixels from RAM, update cursor $FF11: <code>GRAPH_LL_set_8_pixels</code> - set 8 pixels from bit mask (transparent), update cursor $FF14: <code>GRAPH_LL_set_8_pixels_opaque</code> - set 8 pixels from bit mask (opaque), update cursor $FF17: <code>GRAPH_LL_fill_pixels</code> - fill pixels with constant color, update cursor $FF1A: <code>GRAPH_LL_filter_pixels</code> - apply transform to pixels, update cursor $FF1D: <code>GRAPH_LL_move_pixels</code> - copy horizontally consecutive pixels to a different position</p>
-<p>All calls are vectored, which allows installing a replacement graphics driver.</p>
-<p>$02E4: I_GRAPH_LL_init $02E6: I_GRAPH_LL_get_info $02E8: I_GRAPH_LL_set_palette $02EA: I_GRAPH_LL_cursor_position $02EC: I_GRAPH_LL_cursor_next_line $02EE: I_GRAPH_LL_get_pixel $02F0: I_GRAPH_LL_get_pixels $02F2: I_GRAPH_LL_set_pixel $02F4: I_GRAPH_LL_set_pixels $02F6: I_GRAPH_LL_set_8_pixels $02F8: I_GRAPH_LL_set_8_pixels_opaque $02FA: I_GRAPH_LL_fill_pixels $02FC: I_GRAPH_LL_filter_pixels $02FE: I_GRAPH_LL_move_pixels</p>
+<h4 id="sprites">Sprites</h4>
+<p>$FEF0: <code>sprite_set_image</code> - set the image of a sprite $FEF3: <code>sprite_set_position</code> - set the position of a sprite</p>
+<h5 id="function-name-sprite_set_image">Function Name: sprite_set_image</h5>
+<p>Purpose: Set the image of a sprite Call address: $FEF0 Signature: bool sprite_set_image(byte number: .a, width: .x, height: .y, apply_mask: .c, word pixels: r0, word mask: r1, byte bpp: r2L); Error returns: .C = 1 in case of error</p>
+<p><strong>Description:</strong> This function sets the image of a sprite. The number of the sprite is given in .A, The bits per pixel (bpp) in r2L, and the width and height in .X and .Y. The pixel data at r0 is interpreted accordingly and converted into the graphics hardware's native format. If the .C flag is set, the transparency mask pointed to by r1 is applied during the conversion. The function returns .C = 0 if converting the data was successful, and .C = 1 otherwise. Note that this does not change the visibility of the sprite.</p>
+<p><strong>Note</strong>: There are certain limitations on the possible values of width, height, bpp and apply_mask:</p>
+<ul>
+<li>width and height may not exceed the hardware's capabilities.</li>
+<li>Legal values for bpp are 1, 4 and 8. If the hardware only supports lower depths, the image data is converted down.</li>
+<li>apply_mask is only valid for 1 bpp data.</li>
+</ul>
+<h5 id="function-name-sprite_set_position">Function Name: sprite_set_position</h5>
+<p>Purpose: Set the the position of a sprite or hide it. Call address: $FEF3 Signature: void sprite_set_position(byte number: .a, word x: r0, word y: r1); Error returns: None</p>
+<p><strong>Description:</strong> This function shows a given sprite (.A) at a certain position or hides it. The position is passed in r0 and r1. If the x position is negative (&gt;$8000), the sprite will be hidden.</p>
+<h4 id="framebuffer">Framebuffer</h4>
+<p>The framebuffer API is a low-level graphics API that completely abstracts the framebuffer by exposing a minimal set of high-performance functions. It is useful as an abstraction and as a convenience library for applications that need high performance framebuffer access.</p>
+<p>$FEF6: <code>FB_init</code> - enable graphics mode $FEF9: <code>FB_get_info</code> - get screen size and color depth $FEFC: <code>FB_set_palette</code> - set (parts of) the palette $FEFF: <code>FB_cursor_position</code> - position the direct-access cursor $FF02: <code>FB_cursor_next_line</code> - move direct-access cursor to next line $FF05: <code>FB_get_pixel</code> - read one pixel, update cursor $FF08: <code>FB_get_pixels</code> - copy pixels into RAM, update cursor $FF0B: <code>FB_set_pixel</code> - set one pixel, update cursor $FF0E: <code>FB_set_pixels</code> - copy pixels from RAM, update cursor $FF11: <code>FB_set_8_pixels</code> - set 8 pixels from bit mask (transparent), update cursor $FF14: <code>FB_set_8_pixels_opaque</code> - set 8 pixels from bit mask (opaque), update cursor $FF17: <code>FB_fill_pixels</code> - fill pixels with constant color, update cursor $FF1A: <code>FB_filter_pixels</code> - apply transform to pixels, update cursor $FF1D: <code>FB_move_pixels</code> - copy horizontally consecutive pixels to a different position</p>
+<p>All calls are vectored, which allows installing a replacement framebuffer driver.</p>
+<p>$02E4: I_FB_init $02E6: I_FB_get_info $02E8: I_FB_set_palette $02EA: I_FB_cursor_position $02EC: I_FB_cursor_next_line $02EE: I_FB_get_pixel $02F0: I_FB_get_pixels $02F2: I_FB_set_pixel $02F4: I_FB_set_pixels $02F6: I_FB_set_8_pixels $02F8: I_FB_set_8_pixels_opaque $02FA: I_FB_fill_pixels $02FC: I_FB_filter_pixels $02FE: I_FB_move_pixels</p>
 <p>The model of this API is based on the direct-access cursor. In order to read and write pixels, the cursor has to be set to a specific x/y-location, and all subsequent calls will access consecutive pixels at the cursor position and update the cursor.</p>
-<p>The default driver supports the VERA framebuffer at a resolution of 320x200 pixels and 256 colors. Using <code>scnmod</code> to set mode $80 will enable this driver.</p>
-<h5 id="function-name-graph_ll_init">Function Name: GRAPH_LL_init</h5>
-<p>Signature: void GRAPH_LL_init(); Purpose: Enter graphics mode.</p>
-<h5 id="function-name-graph_ll_get_info">Function Name: GRAPH_LL_get_info</h5>
-<p>Signature: void GRAPH_LL_get_info(out word width: r0, out word height: r0, out byte color_depth: .a); Purpose: Return the resolution and color depth</p>
-<h5 id="function-name-graph_ll_set_palette">Function Name: GRAPH_LL_set_palette</h5>
-<p>Signature: void GRAPH_LL_set_palette(word pointer: r0, index: .a, byte count: .x); Purpose: Set (parts of) the palette</p>
+<p>The default driver supports the VERA framebuffer at a resolution of 320x200 pixels and 256 colors. Using <code>screen_set_mode</code> to set mode $80 will enable this driver.</p>
+<h5 id="function-name-fb_init">Function Name: FB_init</h5>
+<p>Signature: void FB_init(); Purpose: Enter graphics mode.</p>
+<h5 id="function-name-fb_get_info">Function Name: FB_get_info</h5>
+<p>Signature: void FB_get_info(out word width: r0, out word height: r1, out byte color_depth: .a); Purpose: Return the resolution and color depth</p>
+<h5 id="function-name-fb_set_palette">Function Name: FB_set_palette</h5>
+<p>Signature: void FB_set_palette(word pointer: r0, index: .a, byte count: .x); Purpose: Set (parts of) the palette</p>
 <p>[Note: This is not yet implemented.]</p>
-<h5 id="function-name-graph_ll_cursor_position">Function Name: GRAPH_LL_cursor_position</h5>
-<p>Signature: void GRAPH_LL_cursor_position(word x: r0, word y: r1); Purpose: Position the direct-access cursor</p>
-<p><strong>Description:</strong> <code>GRAPH_LL_cursor_position</code> sets the direct-access cursor to the given screen coordinate. Future operations will access pixels at the cursor location and update the cursor.</p>
-<h5 id="function-name-graph_ll_cursor_next_line">Function Name: GRAPH_LL_cursor_next_line</h5>
-<p>Signature: void GRAPH_LL_cursor_next_line(word x: r0); Purpose: Move the direct-access cursor to next line</p>
-<p><strong>Description:</strong> <code>GRAPH_LL_cursor_next_line</code> increments the y position of the direct-access cursor, and sets the x position to the same one that was passed to the previous <code>GRAPH_LL_cursor_position</code> call. This is useful for drawing rectangular shapes, and faster than explicitly positioning the cursor.</p>
-<h5 id="function-name-graph_ll_get_pixel">Function Name: GRAPH_LL_get_pixel</h5>
-<p>Signature: byte GRAPH_LL_get_pixel(); Purpose: Read one pixel, update cursor</p>
-<h5 id="function-name-graph_ll_get_pixels">Function Name: GRAPH_LL_get_pixels</h5>
-<p>Signature: void GRAPH_LL_get_pixels(word ptr: r0, word count: r1); Purpose: Copy pixels into RAM, update cursor</p>
+<h5 id="function-name-fb_cursor_position">Function Name: FB_cursor_position</h5>
+<p>Signature: void FB_cursor_position(word x: r0, word y: r1); Purpose: Position the direct-access cursor</p>
+<p><strong>Description:</strong> <code>FB_cursor_position</code> sets the direct-access cursor to the given screen coordinate. Future operations will access pixels at the cursor location and update the cursor.</p>
+<h5 id="function-name-fb_cursor_next_line">Function Name: FB_cursor_next_line</h5>
+<p>Signature: void FB_cursor_next_line(word x: r0); Purpose: Move the direct-access cursor to next line</p>
+<p><strong>Description:</strong> <code>FB_cursor_next_line</code> increments the y position of the direct-access cursor, and sets the x position to the same one that was passed to the previous <code>FB_cursor_position</code> call. This is useful for drawing rectangular shapes, and faster than explicitly positioning the cursor.</p>
+<h5 id="function-name-fb_get_pixel">Function Name: FB_get_pixel</h5>
+<p>Signature: byte FB_get_pixel(); Purpose: Read one pixel, update cursor</p>
+<h5 id="function-name-fb_get_pixels">Function Name: FB_get_pixels</h5>
+<p>Signature: void FB_get_pixels(word ptr: r0, word count: r1); Purpose: Copy pixels into RAM, update cursor</p>
 <p><strong>Description:</strong> This function copies pixels into an array in RAM. The array consists of one byte per pixel.</p>
-<h5 id="function-name-graph_ll_set_pixel">Function Name: GRAPH_LL_set_pixel</h5>
-<p>Signature: void GRAPH_LL_set_pixel(byte color: .a); Purpose: Set one pixel, update cursor</p>
-<h5 id="function-name-graph_ll_set_pixels">Function Name: GRAPH_LL_set_pixels</h5>
-<p>Signature: void GRAPH_LL_set_pixels(word ptr: r0, word count: r1); Purpose: Copy pixels from RAM, update cursor</p>
+<h5 id="function-name-fb_set_pixel">Function Name: FB_set_pixel</h5>
+<p>Signature: void FB_set_pixel(byte color: .a); Purpose: Set one pixel, update cursor</p>
+<h5 id="function-name-fb_set_pixels">Function Name: FB_set_pixels</h5>
+<p>Signature: void FB_set_pixels(word ptr: r0, word count: r1); Purpose: Copy pixels from RAM, update cursor</p>
 <p><strong>Description:</strong> This function sets pixels from an array of pixels in RAM. The array consists of one byte per pixel.</p>
-<h5 id="function-name-graph_ll_set_8_pixels">Function Name: GRAPH_LL_set_8_pixels</h5>
-<p>Signature: void GRAPH_LL_set_8_pixels(byte pattern: .a, byte color: .x); Purpose: Set 8 pixels from bit mask (transparent), update cursor</p>
+<h5 id="function-name-fb_set_8_pixels">Function Name: FB_set_8_pixels</h5>
+<p>Signature: void FB_set_8_pixels(byte pattern: .a, byte color: .x); Purpose: Set 8 pixels from bit mask (transparent), update cursor</p>
 <p><strong>Description:</strong> This function sets all 1-bits of the pattern to a given color and skips a pixel for every 0 bit. The order is MSB to LSB. The cursor will be moved by 8 pixels.</p>
-<h5 id="function-name-graph_ll_set_8_pixels_opaque">Function Name: GRAPH_LL_set_8_pixels_opaque</h5>
-<p>Signature: void GRAPH_LL_set_8_pixels_opaque(byte pattern: .a, byte mask: r0L, byte color1: .x, byte color2: .y); Purpose: Set 8 pixels from bit mask (opaque), update cursor</p>
+<h5 id="function-name-fb_set_8_pixels_opaque">Function Name: FB_set_8_pixels_opaque</h5>
+<p>Signature: void FB_set_8_pixels_opaque(byte pattern: .a, byte mask: r0L, byte color1: .x, byte color2: .y); Purpose: Set 8 pixels from bit mask (opaque), update cursor</p>
 <p><strong>Description:</strong> For every 1-bit in the mask, this function sets the pixel to color1 if the corresponding bit in the pattern is 1, and to color2 otherwise. For every 0-bit in the mask, it skips a pixel. The order is MSB to LSB. The cursor will be moved by 8 pixels.</p>
-<h5 id="function-name-graph_ll_fill_pixels">Function Name: GRAPH_LL_fill_pixels</h5>
-<p>Signature: void GRAPH_LL_fill_pixels(word count: r0, word step: r1, byte color: .a); Purpose: Fill pixels with constant color, update cursor</p>
-<p><strong>Description:</strong> <code>GRAPH_LL_fill_pixels</code> sets pixels with a constant color. The argument <code>step</code> specifies the increment between pixels. A value of 0 or 1 will cause consecutive pixels to be set. Passing a <code>step</code> value of the screen width will set vertically adjacent pixels going top down. Smaller values allow drawing dotted horizontal lines, and multiples of the screen width allow drawig dotted vertical lines.</p>
+<h5 id="function-name-fb_fill_pixels">Function Name: FB_fill_pixels</h5>
+<p>Signature: void FB_fill_pixels(word count: r0, word step: r1, byte color: .a); Purpose: Fill pixels with constant color, update cursor</p>
+<p><strong>Description:</strong> <code>FB_fill_pixels</code> sets pixels with a constant color. The argument <code>step</code> specifies the increment between pixels. A value of 0 or 1 will cause consecutive pixels to be set. Passing a <code>step</code> value of the screen width will set vertically adjacent pixels going top down. Smaller values allow drawing dotted horizontal lines, and multiples of the screen width allow drawig dotted vertical lines.</p>
 <p><em>[Note: Only the values 0/1 and screen width are currently supported.]</em></p>
-<h5 id="function-name-graph_ll_filter_pixels">Function Name: GRAPH_LL_filter_pixels</h5>
-<p>Signature: void GRAPH_LL_filter_pixels(word ptr: r0, word count: r1); Purpose: Apply transform to pixels, update cursor</p>
+<h5 id="function-name-fb_filter_pixels">Function Name: FB_filter_pixels</h5>
+<p>Signature: void FB_filter_pixels(word ptr: r0, word count: r1); Purpose: Apply transform to pixels, update cursor</p>
 <p><strong>Description:</strong> This function allows modifying consecutive pixels. The function pointer will be called for every pixel, with the color in .a, and it needs to return the new color in .a.</p>
-<h5 id="function-name-graph_ll_move_pixels">Function Name: GRAPH_LL_move_pixels</h5>
-<p>Signature: void GRAPH_LL_move_pixels(word sx: r0, word sy: r1, word tx: r2, word ty: r3, word count: r4); Purpose: Copy horizontally consecutive pixels to a different position</p>
+<h5 id="function-name-fb_move_pixels">Function Name: FB_move_pixels</h5>
+<p>Signature: void FB_move_pixels(word sx: r0, word sy: r1, word tx: r2, word ty: r3, word count: r4); Purpose: Copy horizontally consecutive pixels to a different position</p>
 <p><em>[Note: Overlapping regions are not yet supported.]</em></p>
 <h4 id="graphics">Graphics</h4>
-<p>The high-level graphics API exposes a set of standard functions. It allows applications to easily perform some common high-level actions like drawing lines, rectangles and images, as well as moving parts of the screen. All commands are completely implemented on top of the low-level API, that is, they will continue working after replacing the low-level driver with one that supports a different resolution, color depth or even graphics device.</p>
+<p>The high-level graphics API exposes a set of standard functions. It allows applications to easily perform some common high-level actions like drawing lines, rectangles and images, as well as moving parts of the screen. All commands are completely implemented on top of the framebuffer API, that is, they will continue working after replacing the framebuffer driver with one that supports a different resolution, color depth or even graphics device.</p>
 <p>$FF20: <code>GRAPH_init</code> - initialize graphics $FF23: <code>GRAPH_clear</code> - clear screen $FF26: <code>GRAPH_set_window</code> - set clipping region $FF29: <code>GRAPH_set_colors</code> - set stroke, fill and background colors $FF2C: <code>GRAPH_draw_line</code> - draw a line $FF2F: <code>GRAPH_draw_rect</code> - draw a rectangle (optionally filled) $FF32: <code>GRAPH_move_rect</code> - move pixels $FF35: <code>GRAPH_draw_oval</code> - draw an oval or circle $FF38: <code>GRAPH_draw_image</code> - draw a rectangular image $FF3B: <code>GRAPH_set_font</code> - set the current font $FF3E: <code>GRAPH_get_char_size</code> - get size and baseline of a character $FF41: <code>GRAPH_put_char</code> - print a character</p>
 <h5 id="function-name-graph_init">Function Name: GRAPH_init</h5>
-<p>Signature: void GRAPH_init(); Purpose: Enter and initialize graphics mode</p>
-<p><strong>Description</strong>: This call switches the video hardware into graphics mode, sets the window to full screen, initializes the colors and activates the system font.</p>
+<p>Signature: void GRAPH_init(word vectors: r0); Purpose: Activate framebuffer driver, enter and initialize graphics mode</p>
+<p><strong>Description</strong>: This call activates the framebuffer driver whose vector table is passed in r0. If r0 is 0, the default driver is activated. It then switches the video hardware into graphics mode, sets the window to full screen, initializes the colors and activates the system font.</p>
 <h5 id="function-name-graph_clear">Function Name: GRAPH_clear</h5>
 <p>Signature: void GRAPH_clear(); Purpose: Clear the current window with the current background color.</p>
 <h5 id="function-name-graph_set_window">Function Name: GRAPH_set_window</h5>
 <p>Signature: void GRAPH_set_window(word x: r0, word y: r1, word width: r2, word height: r3); Purpose: Set the clipping region</p>
-<p><strong>Description:</strong> All graphics commands are clipped to the window. This function configures the origin and size of the window.</p>
-<p><em>[Note: Only text output is currently clipped.]</em></p>
+<p><strong>Description:</strong> All graphics commands are clipped to the window. This function configures the origin and size of the window. All 0 arguments set the window to full screen.</p>
+<p><em>[Note: Only text output and GRAPH_clear currently respect the clipping region.]</em></p>
 <h5 id="function-name-graph_set_colors">Function Name: GRAPH_set_colors</h5>
 <p>Signature: void GRAPH_set_colors(byte stroke: .a, byte fill: .x, byte background: .y); Purpose: Set the three colors</p>
 <p><strong>Description:</strong> This function sets the three colors: The stroke color, the fill color and the background color.</p>
@@ -1152,39 +1205,13 @@ BNE BUTTON_PRESSED
 <p>Signature: void GRAPH_set_font(void ptr: r0); Purpose: Set the current font</p>
 <p><strong>Description:</strong> This function sets the current font to be used for the remaining font-related functions. The argument is a pointer to the font data structure in memory, which must be in the format of a single point size GEOS font (i.e. one GEOS font file VLIR chunk). An argument of 0 will activate the built-in system font.</p>
 <h5 id="function-name-graph_get_char_size">Function Name: GRAPH_get_char_size</h5>
-<p>Signature: (byte baseline: .a, byte width: .x, byte height: .y) GRAPH_get_char_size(byte c: .a, byte format: .x); Purpose: Get the size and baseline of a character</p>
-<p><strong>Description:</strong> This function returns the metrics of a character in a given format. The format value is a bit mask combining the following values:</p>
-<table>
-<thead>
-<tr class="header">
-<th>Value</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>$80</td>
-<td>underlined</td>
-</tr>
-<tr class="even">
-<td>$40</td>
-<td>bold</td>
-</tr>
-<tr class="odd">
-<td>$20</td>
-<td>reversed</td>
-</tr>
-<tr class="even">
-<td>$10</td>
-<td>italics</td>
-</tr>
-<tr class="odd">
-<td>$08</td>
-<td>outline</td>
-</tr>
-</tbody>
-</table>
-<p>The resulting values are measured in pixels. The basline is measured from the top.</p>
+<p>Signature: (byte baseline: .a, byte width: .x, byte height_or_style: .y, bool is_coltrol: .c) GRAPH_get_char_size(byte c: .a, byte format: .x); Purpose: Get the size and baseline of a character, or interpret a control code</p>
+<p><strong>Description:</strong> This functionality of <code>GRAPH_get_char_size</code> depends on the type of code that is passed in: For a printable character, this function returns the metrics of the character in a given format. For a control code, it returns the resulting format. In either case, the current format is passed in .x, and the character in .a.</p>
+<ul>
+<li>The format is an opaque byte value whose value should not be relied upon, except for <code>0</code>, which is plain text.</li>
+<li>The resulting values are measured in pixels.</li>
+<li>The basline is measured from the top.</li>
+</ul>
 <h5 id="function-name-graph_put_char">Function Name: GRAPH_put_char</h5>
 <p>Signature: void GRAPH_put_char(inout word x: r0, inout word y: r1, byte c: .a); Purpose: Print a character onto the graphics screen</p>
 <p><strong>Description:</strong> This function prints a single character at a given location on the graphics screen. The location is then updated. The following control codes are supported:</p>
@@ -1215,8 +1242,52 @@ BNE BUTTON_PRESSED
 <li>The stroke color is used to draw the characters, and the underline is drawn using the fill color. In reverse text mode, the text background is filled with the fill color.</li>
 <li><em>[BELL ($07), TAB ($09) and SHIFT+TAB ($18) are not yet implemented.]</em></li>
 </ul>
+<h4 id="console">Console</h4>
+<p>$FEDB: <code>console_init</code> - initialize console mode $FEDE: <code>console_put_char</code> - print character to console $FED8: <code>console_put_image</code> - draw image as if it was a character $FEE1: <code>console_get_char</code> - get character from console $FED5: <code>console_set_paging_message</code> - set paging message or disable paging</p>
+<p>The console is a screen mode that allows text output and input in proportional fonts that support the usual styles. It is useful for rich text-based interfaces.</p>
+<h5 id="function-name-console_init">Function Name: console_init</h5>
+<p>Signature: void console_init(word x: r0, word y: r1, word width: r2, word height: r3); Purpose: Initialize console mode. Call address: $FEDB</p>
+<p><strong>Description:</strong> This function initializes console mode. It sets up the window (text clipping area) passed into it, clears the window and positions the cursor at the top left. All 0 arguments create a full screen console. You have to switch to graphics mode using <code>screen_set_mode</code> beforehand.</p>
+<h5 id="function-name-console_put_char">Function Name: console_put_char</h5>
+<p>Signature: void console_put_char(byte char: .a, bool wrapping: .c); Purpose: Print a character to the console. Call address: $FEDE</p>
+<p><strong>Description:</strong> This function prints a character to the console. The .C flag specifies whether text should be wrapped at character (.C=0) or word (.C=1) boundaries. In the latter case, characters will be buffered until a SPACE, CR or LF character is sent, so make sure the text that is printed always ends in one of these characters.</p>
+<p><strong>Note</strong>: If the bottom of the screen is reached, this function will scroll its contents up to make extra room.</p>
+<h5 id="function-name-console_put_image">Function Name: console_put_image</h5>
+<p>Signature: void console_put_image(word ptr: r0, word width: r1, word height: r2); Purpose: Draw image as if it was a character. Call address: $FEE1</p>
+<p><strong>Description:</strong> This function draws an image (in GRAPH_draw_image format) at the current cursor position and advances the cursor accordingly. This way, an image can be presented inline. A common example would be an emoji bitmap, but it is also possible to show full-width pictures if you print a newline before and after the image.</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>If the bottom of the screen is reached, this function will scroll its contents up to make extra room.</li>
+<li>Subsequent line breaks will take the image height into account, so that the new cursor position is below the image.</li>
+</ul>
+<h5 id="function-name-console_get_char">Function Name: console_get_char</h5>
+<p>Signature: (byte char: .a) console_get_char(); Purpose: Get a character from the console. Call address: $FEE1</p>
+<p><strong>Description:</strong> This function gets a character to the console. It does this by collecting a whole line of character, i.e. until the user presses RETURN. Then, the line will be sent character by character.</p>
+<p>This function allows editing the line using BACKSPACE/DEL, but does not allow moving the cursor within the line, write more than one line, or using control codes.</p>
+<h5 id="function-name-console_set_paging_message">Function Name: console_set_paging_message</h5>
+<p>Signature: void console_set_paging_message(word message: r0); Purpose: Set the paging message or disable paging. Call address: $FED5</p>
+<p><strong>Description:</strong> The console can halt printing after a full screen height worth of text has been printed. It will then show a message, wait for any key, and continue printing. This function sets this message. A zero-terminated text is passed in r0. To turn off paging, call this function with r0 = 0 - this is the default.</p>
+<p><strong>Note:</strong> It is possible to use control codes to change the text style and color. Do not use codes that change the cursor position, like CR or LF. Also, the text must not overflow one line on the screen.</p>
 <h4 id="other">Other</h4>
-<p>$FF44: <code>monitor</code> - enter machine language monitor $FF47: <code>restore_basic</code> - enter BASIC $FF5F: <code>scrmod</code> - set screen mode</p>
+<p>$FEE4: <code>memory_fill</code> - fill memory region with a byte value $FEE7: <code>memory_copy</code> - copy memory region $FEEA: <code>memory_crc</code> - calculate CRC16 of memory region $FEED: <code>memory_decompress</code> - decompress LZSA2 block $FF44: <code>monitor</code> - enter machine language monitor $FF47: <code>enter_basic</code> - enter BASIC $FF5F: <code>screen_set_mode</code> - set screen mode $FF62: <code>screen_set_charset</code> - activate 8x8 text mode charset</p>
+<h5 id="function-name-memory_fill">Function Name: memory_fill</h5>
+<p>Signature: void memory_fill(word address: r0, word num_bytes: r1, byte value: .a); Purpose: Fill a memory region with a byte value. Call address: $FEE4</p>
+<p><strong>Description:</strong> This function fills the memory region specified by an address (r0) and a size in bytes (r1) with the constant byte value passed in .A.</p>
+<h5 id="function-name-memory_copy">Function Name: memory_copy</h5>
+<p>Signature: void memory_copy(word source: r0, word target: r1, word num_bytes: r2); Purpose: Copy a memory region to a different region. Call address: $FEE7</p>
+<p><strong>Description:</strong> This function copies one memory region specified by an address (r0) and a size in bytes (r2) to a different region specified by its start address (r1). The two regions may overlap.</p>
+<h5 id="function-name-memory_crc">Function Name: memory_crc</h5>
+<p>Signature: (word result: r2) memory_crc(word address: r0, word num_bytes: r1); Purpose: Calculate the CRC16 of a memory region. Call address: $FEEA</p>
+<p><strong>Description:</strong> This function calculates the CRC16 checksum of the memory region specified by an address (r0) and a size in bytes (r1). The result is returned in r2.</p>
+<h5 id="function-name-memory_decompress">Function Name: memory_decompress</h5>
+<p>Signature: void memory_decompress(word input: r0, inout word output: r1); Purpose: Decompress an LZSA2 block Call address: $FEED</p>
+<p><strong>Description:</strong> This function decompresses an LZSA2-compressed data block from the location passed in r0 and outputs the decompressed data at the location passed in r1. After the call, r1 will be updated with the location of the last output byte plus one.</p>
+<p><strong>Notes</strong>:</p>
+<ul>
+<li>To create compressed data, use the <code>lzsa</code> tool<a href="[https://github.com/emmanuel-marty/lzsa](https://github.com/emmanuel-marty/lzsa)">^4</a> like this: <code>lzsa -r -f2 &lt;original_file&gt; &lt;compressed_file&gt;</code></li>
+<li>This function cannot be used to decompress data in-place, as the output data would overwrite the input data before it is consumed. Therefore, make sure to load the input data to a different location.</li>
+<li>It is possible to have the input data stored in banked RAM, with the obvious 8 KB size restriction.</li>
+</ul>
 <h5 id="function-name-monitor">Function Name: monitor</h5>
 <p>Purpose: Enter the machine language monitor Call address: $FF44 Communication registers: None Preparatory routines: None Error returns: Does not return Stack requirements: Does not return Registers affected: Does not return</p>
 <p><strong>Description:</strong> This routine switches from BASIC to machine language monitor mode. It does not return to the caller. When the user quits the monitor, it will restart BASIC.</p>
@@ -1227,14 +1298,57 @@ BNE BUTTON_PRESSED
 <p><strong>EXAMPLE:</strong></p>
 <pre><code>  JMP monitor
 </code></pre>
-<h5 id="function-name-scrmod">Function Name: scrmod</h5>
+<h5 id="function-name-enter_basic">Function Name: enter_basic</h5>
+<p>Purpose: Enter BASIC Call address: $FF47 Communication registers: .C Preparatory routines: None Error returns: Does not return</p>
+<p><strong>Description:</strong> Call this to enter BASIC mode, either through a cold start (.C=1) or a warm start (.C=0).</p>
+<p><strong>EXAMPLE:</strong></p>
+<pre><code>CLC
+JMP enter_basic ; returns to the &quot;READY.&quot; prompt
+</code></pre>
+<h5 id="function-name-screen_set_mode">Function Name: screen_set_mode</h5>
 <p>Purpose: Set the screen mode Call address: $FF5F Communication registers: .A Preparatory routines: None Error returns: .C = 1 in case of error Stack requirements: [?] Registers affected: .A, .X, .Y</p>
-<p><strong>Description:</strong> A call to this routine, with the carry flag set, sets the current screen mode to the value in .A. For a list of possible values, see the basic statement <code>SCREEN</code>. A call with the carry bit clear returns the current mode in .A.</p>
+<p><strong>Description:</strong> A call to this routine sets the current screen mode to the value in .A. For a list of possible values, see the basic statement <code>SCREEN</code>.</p>
 <p><strong>EXAMPLE:</strong></p>
 <pre><code>LDA #$80
-SEC
-JSR scrmod ; SET 320x200@256C MODE
+JSR screen_set_mode ; SET 320x200@256C MODE
 BCS FAILURE
+</code></pre>
+<h5 id="function-name-screen_set_charset">Function Name: screen_set_charset</h5>
+<p>Purpose: Activate a 8x8 text mode charset Call address: $FF62</p>
+<p>Communication registers: .A, .X, .Y Preparatory routines: None Stack requirements: [?] Registers affected: .A, .X, .Y</p>
+<p><strong>Description:</strong> A call to this routine uploads a character set to the video hardware and activates it. The value of .A decides what charset to upload:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>use pointer in .X/.Y</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>ISO</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>PET upper/graph</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>PET upper/lower</td>
+</tr>
+</tbody>
+</table>
+<p>If .A is zero, .X (lo) and .Y (hi) contain a pointer to a 2 KB RAM area that gets uploaded as the new 8x8 character set. The data has to consist of 256 characters of 8 bytes each, top to bottom, with the MSB on the left and set bits representing the foreground color.</p>
+<p><strong>EXAMPLE:</strong></p>
+<pre><code>LDA #0
+LDX #&lt;MY_CHARSET
+LDY #&gt;MY_CHARSET
+JSR screen_set_charset ; UPLOAD CUSTOM CHARSET &quot;MY_CHARSET&quot;
 </code></pre>
 <h5 id="function-name-jsrfar">Function Name: JSRFAR</h5>
 <p>Purpose: Execute a routine on another RAM or ROM bank Call address: $FF6E Communication registers: None Preparatory routines: None Error returns: None Stack requirements: 4 Registers affected: None</p>
@@ -1300,7 +1414,7 @@ ECF000 F00F
 </tbody>
 </table>
 <h3 id="banked-memory">Banked Memory</h3>
-<p>The RAM bank (0-255) defaults to 255, and the ROM bank (0-7) defaults to 7 on RESET. The RAM bank can be configured through VIA#1 PA0-7 ($9F61), and the ROM bank through VIA#1 PB0-2 ($9F60). See section "I/O Programming" for more information.</p>
+<p>The RAM bank (0-255) defaults to 0, and the ROM bank (0-7) defaults to 0 on RESET. The RAM bank can be configured through VIA#1 PA0-7 ($9F61), and the ROM bank through VIA#1 PB0-2 ($9F60). See section "I/O Programming" for more information.</p>
 <h3 id="rom-allocations">ROM Allocations</h3>
 <p>This is the allocation of the banks of banked ROM:</p>
 <table>
@@ -1378,7 +1492,7 @@ ECF000 F00F
 </tr>
 <tr class="odd">
 <td>$0400-$07FF</td>
-<td>currently unused</td>
+<td>Available for machine code programs or custom data storage</td>
 </tr>
 <tr class="even">
 <td>$0800-$9EFF</td>
@@ -1423,18 +1537,16 @@ ECF000 F00F
 <tbody>
 <tr class="odd">
 <td>0</td>
-<td>Used for KERNAL variables</td>
+<td>Used for KERNAL/CBDOS variables and buffers</td>
 </tr>
 <tr class="even">
-<td>1-254</td>
+<td>1-255</td>
 <td>Available to the user</td>
-</tr>
-<tr class="odd">
-<td>255[^2]</td>
-<td>DOS buffers and variables</td>
 </tr>
 </tbody>
 </table>
+<p>(On systems with only 512 KB RAM, banks 64-255 are unavailable.)</p>
+<p>During startup, the KERNAL activates RAM bank 1 as the default for the user.</p>
 <h3 id="io-area">I/O Area</h3>
 <p>This is the memory map of the I/O Area:</p>
 <table>
@@ -1488,7 +1600,7 @@ ECF000 F00F
 <p>See the <a href="VERA%20Programmer&#39;s%20Reference.html">VERA Programmer's Reference</a> for the complete reference.</p>
 <p><strong>IMPORTANT</strong>: The VERA register layout has changed between 0.7 and 0.8. Here is the old documentation: <a href="https://github.com/commanderx16/x16-docs/blob/master/old/vera-module%20v0.7.pdf">vera-module v0.7.pdf</a></p>
 <p>The KERNAL uploads the current character sets (PETSCII graphics, PETSCII upper/lower or ISO-8859-15) to $0F800, i.e. the top of video RAM bank 0.</p>
-<p>Application software is free to reuse this part of video RAM if it does not need the character set. If it needs them again later, it can use the KERNAL call <code>CINT</code> ($FF81), which initializes the VERA chip and uploads the PETSCII graphics character set, or print character code $0E too trigger an upload of the PETSCII upper/lower chcracter set, or $0F for the ISO character set.</p>
+<p>Application software is free to reuse this part of video RAM if it does not need the character set. If it needs them again later, it can use the KERNAL call <code>CINT</code> ($FF81), which initializes the VERA chip and uploads the PETSCII graphics character set, or call <code>screen_set_charset</code> ($FF62) to upload a particular charset.</p>
 <h2 id="sound-programming">Sound Programming</h2>
 <p><em>[TODO]</em></p>
 <h2 id="io-programming">I/O Programming</h2>
@@ -1576,7 +1688,6 @@ ECF000 F00F
 <!------->
 
 <p>[^1]: Current development systems have 2 MB of bankable RAM. Actual hardware is currently planned to have an option of either 512 KB or 2 MB of RAM.</p>
-<p>[^2]: On systems with 512 KB RAM, DOS uses bank 63, and banks 0-62 are available to the user.</p>
 <p>[^3]: The pin assignment of the NES/SNES controller is likely to change.</p>
 </body>
 </html>
